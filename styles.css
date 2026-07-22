@@ -1,0 +1,300 @@
+/* ============================================================
+   Standing Room Society — "sold out snipe" rehaul
+   Paper ground · Didone display · one red accent (the tape)
+   CSS-only redesign: every selector hook from the original
+   stylesheet is preserved; markup and JS are untouched.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,500&family=Oswald:wght@400;500;600&display=swap');
+
+:root{
+  --paper:#e4e6e6;          /* cool gray paper, from the logo comps */
+  --paper-deep:#d8dbdc;     /* pressed edge / subtle wells */
+  --ink:#17161a;
+  --ink-soft:#5a5b60;
+  --ink-faint:#8b8c90;
+  --tape:#cd534d;           /* the red */
+  --tape-deep:#b03f3a;      /* links, hover states */
+  --hairline:rgba(23,22,26,0.16);
+  --hairline-strong:rgba(23,22,26,0.55);
+
+  /* Roles kept from the old token names so nothing dangles:   */
+  --deco:'Oswald','Arial Narrow',sans-serif;        /* labels/tape */
+  --serif:'Source Sans 3','Helvetica Neue',Arial,sans-serif; /* body */
+  --display:'Bodoni Moda','Didot','Playfair Display',serif;  /* titles */
+
+  /* torn tape ends, shared by every snipe */
+  --tape-tear:polygon(1.2% 0%, 98.4% 4%, 100% 18%, 98.8% 46%, 100% 74%, 98.2% 100%, 2% 96%, 0% 82%, 1.6% 52%, 0% 22%);
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background-color:var(--paper);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.045 0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+  color:var(--ink);
+  font-family:var(--serif);
+  min-height:100vh;
+}
+
+::selection{background:var(--tape);color:#fff;}
+a:focus-visible,button:focus-visible{outline:2px solid var(--tape);outline-offset:3px;}
+
+/* ---------- Header ---------- */
+header{
+  padding:22px 24px 44px;
+  text-align:center;
+}
+h1{
+  font-family:var(--display);
+  font-weight:600;
+  font-size:clamp(2.4rem, 7vw, 4.4rem);
+  line-height:1.04;
+  margin:0;
+  color:var(--ink);
+  letter-spacing:0.015em;
+  text-transform:uppercase;
+}
+/* "Society" — the sold-out snipe slapped across the wordmark */
+h1 span{
+  display:inline-block;
+  font-family:var(--deco);
+  font-weight:500;
+  font-size:0.34em;
+  letter-spacing:0.24em;
+  text-indent:0.24em;      /* optical centering vs. tracking */
+  color:#fdfbf7;
+  background:
+    linear-gradient(104deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 34%, rgba(0,0,0,0.10) 100%),
+    var(--tape);
+  padding:0.5em 1.05em 0.42em;
+  margin-left:-1.2em;
+  vertical-align:0.42em;
+  transform:rotate(-3.5deg);
+  clip-path:var(--tape-tear);
+  filter:drop-shadow(1px 2px 2px rgba(23,22,26,0.28));
+}
+.tagline{
+  display:block;
+  margin-top:20px;
+  font-family:var(--deco);
+  font-weight:400;
+  text-transform:uppercase;
+  letter-spacing:0.42em;
+  padding-left:0.42em;     /* optical centering with the letter-spacing */
+  font-size:0.72rem;
+  color:var(--ink-soft);
+}
+.updated{
+  margin-top:24px;
+  font-family:var(--deco);
+  font-weight:400;
+  font-size:0.68rem;
+  color:var(--ink-faint);
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+}
+
+/* ---------- Controls ---------- */
+.controls{
+  max-width:1140px;
+  margin:34px auto 0;
+  padding:0 24px;
+  display:flex;
+  justify-content:center;
+}
+.tabs{
+  display:flex;
+  gap:2px;
+  border-bottom:1px solid var(--hairline-strong);
+}
+.tab{
+  font-family:var(--deco);
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:0.14em;
+  font-size:0.74rem;
+  padding:12px 4px 11px;
+  margin-right:26px;
+  cursor:pointer;
+  color:var(--ink-faint);
+  background:transparent;
+  border:none;
+  border-bottom:3px solid transparent;
+  transition:color .2s ease, border-color .2s ease;
+}
+.tab:last-child{margin-right:0;}
+.tab:hover{color:var(--ink);}
+.tab.active{
+  color:var(--ink);
+  border-bottom-color:var(--tape);
+}
+
+/* ---------- Listing ---------- */
+.stage{
+  max-width:1140px;
+  margin:22px auto 88px;
+  padding:0 24px;
+}
+.card-list{
+  display:flex;
+  flex-direction:column;
+}
+.show-card{
+  border-bottom:1px solid var(--hairline);
+  padding:24px 6px;
+  display:grid;
+  grid-template-columns:1.5fr 1.4fr 1fr 1.3fr 1.6fr;
+  gap:20px;
+  align-items:start;
+  position:relative;
+  transition:background .18s ease;
+}
+/* hover rail: a strip of the tape */
+.show-card::before{
+  content:'';
+  position:absolute;
+  left:-18px; top:14px; bottom:14px;
+  width:5px;
+  background:var(--tape);
+  clip-path:polygon(8% 0%, 100% 3%, 92% 30%, 100% 55%, 90% 78%, 100% 100%, 4% 97%, 12% 70%, 0% 46%, 10% 20%);
+  opacity:0;
+  transition:opacity .18s ease;
+}
+.show-card:hover{background:rgba(205,83,77,0.05);}
+.show-card:hover::before{opacity:1;}
+
+.col-label{
+  font-family:var(--deco);
+  font-weight:500;
+  text-transform:uppercase;
+  font-size:0.6rem;
+  letter-spacing:0.14em;
+  color:var(--ink-faint);
+  margin-bottom:6px;
+  display:none;
+}
+.show-title{
+  font-family:var(--display);
+  font-size:1.34rem;
+  font-weight:600;
+  color:var(--ink);
+  line-height:1.22;
+}
+.theater-name{font-weight:600;color:var(--ink);}
+.theater-addr{font-size:0.8rem;color:var(--ink-soft);margin-top:3px;}
+.dates-row{font-size:0.86rem;line-height:1.75;color:var(--ink);}
+.dates-row .lbl{
+  color:var(--ink-faint);
+  font-family:var(--deco);
+  font-weight:500;
+  font-size:0.64rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin-right:6px;
+}
+/* "Open run" — a mini snipe */
+.open-ended{
+  display:inline-block;
+  font-family:var(--deco);
+  font-weight:500;
+  font-style:normal;
+  font-size:0.62rem;
+  letter-spacing:0.14em;
+  text-indent:0.14em;
+  text-transform:uppercase;
+  color:#fdfbf7;
+  background:var(--tape);
+  padding:3px 9px 2px;
+  transform:rotate(-1.6deg);
+  clip-path:var(--tape-tear);
+}
+.schedule{font-size:0.83rem;line-height:1.65;color:var(--ink-soft);}
+.discount{font-size:0.83rem;line-height:1.6;color:var(--ink);}
+.discount > div + div{margin-top:5px;}
+.schedule a, .discount a{
+  color:var(--tape-deep);
+  text-decoration:none;
+  border-bottom:1px solid rgba(205,83,77,0.4);
+  transition:color .15s ease, border-color .15s ease;
+}
+.schedule a:hover, .discount a:hover{color:var(--tape);border-bottom-color:var(--tape);}
+
+.header-row{
+  display:grid;
+  grid-template-columns:1.5fr 1.4fr 1fr 1.3fr 1.6fr;
+  gap:20px;
+  padding:0 6px 12px;
+  font-family:var(--deco);
+  font-weight:500;
+  text-transform:uppercase;
+  font-size:0.64rem;
+  letter-spacing:0.14em;
+  color:var(--ink-soft);
+  border-bottom:2px solid var(--hairline-strong);
+  margin-bottom:4px;
+}
+
+.group-title{
+  font-family:var(--display);
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  font-size:1.05rem;
+  color:var(--ink);
+  margin:48px 0 10px;
+}
+/* red underscore, same stroke as the logo's */
+.group-title::after{
+  content:'';
+  display:block;
+  width:52px;
+  height:5px;
+  margin-top:7px;
+  background:var(--tape);
+  transform:rotate(-1.2deg);
+  clip-path:polygon(0% 30%, 4% 0%, 97% 12%, 100% 55%, 96% 100%, 2% 88%);
+}
+.group-title:first-child{margin-top:28px;}
+
+.empty-msg{
+  text-align:center;
+  padding:64px 20px;
+  color:var(--ink-soft);
+  font-style:italic;
+}
+
+footer{
+  text-align:center;
+  padding:36px 20px 56px;
+  color:var(--ink-soft);
+  font-size:0.78rem;
+  line-height:1.7;
+  letter-spacing:0.01em;
+  border-top:1px solid var(--hairline-strong);
+}
+footer a{color:var(--tape-deep);}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 880px){
+  .header-row{display:none;}
+  .show-card{
+    grid-template-columns:1fr;
+    gap:12px;
+    padding:20px 6px;
+  }
+  .col-label{display:block;}
+  .show-card::before{left:-12px;}
+}
+@media (max-width: 560px){
+  header{padding:52px 18px 34px;}
+  h1 span{margin-left:-0.6em;}
+  .tagline{letter-spacing:0.3em;padding-left:0.3em;}
+  .tab{margin-right:16px;letter-spacing:0.1em;}
+  .stage{padding:0 18px;}
+  .show-card::before{left:-10px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition:none !important;}
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Standing Room Society — The Cheap Seats Directory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+
+<header>
+  <img src="srs-logo.png" alt="Standing Room Society: The Cheap Seats Directory" width="500" style="max-width:100%;"/>
+  <span class="tagline">The Cheap Seats Directory</span>
+  <div class="updated" id="updatedText">Loading current show data…</div>
+</header>
+
+<div class="controls">
+  <div class="tabs">
+    <button class="tab active" data-filter="all">All Shows</button>
+    <button class="tab" data-filter="broadway">Broadway</button>
+    <button class="tab" data-filter="off-broadway">Off-Broadway</button>
+  </div>
+</div>
+
+<main class="stage">
+  <div class="header-row">
+    <div>Show</div>
+    <div>Theater</div>
+    <div>Run</div>
+    <div>Schedule</div>
+    <div>Lottery / Rush</div>
+  </div>
+  <div class="card-list" id="cardList"></div>
+  <div class="empty-msg" id="emptyMsg" style="display:none;">No shows to display right now.</div>
+</main>
+
+<footer>
+  Built as a quick reference, not a booking site — ticket links go to each show's own box office.<br>
+  Standard Broadway week is 8 performances, Tue–Sun, with one dark day (usually Monday); a few shows run their own pattern, noted below. Holiday weeks add/shift performances and aren't reflected here.
+</footer>
+
+</body>
+</html>

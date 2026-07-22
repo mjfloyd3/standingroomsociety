@@ -1,0 +1,17 @@
+{
+  "name": "standing-room-society-scraper",
+  "version": "1.0.0",
+  "description": "Scrapes IBDB (Broadway) and Playbill (Off-Broadway) into data/shows.json",
+  "main": "scrape.js",
+  "type": "commonjs",
+  "scripts": {
+    "scrape": "node scrape.js",
+    "scrape:dry": "node scrape.js --dry-run"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  }
+}
