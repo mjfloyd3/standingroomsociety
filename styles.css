@@ -280,6 +280,9 @@ footer{
   line-height:1.7;
   letter-spacing:0.01em;
   border-top:1px solid var(--hairline-strong);
+  p {
+    margin-bottom: 0;
+  }
 }
 footer a{color:var(--tape-deep);}
 
