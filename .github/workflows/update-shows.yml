@@ -1,38 +1,43 @@
 name: Update show data
-
 on:
   schedule:
     # 10:00 UTC daily = 6:00am ET (5am during EST) — runs before most people are checking the site
     - cron: '0 10 * * *'
   workflow_dispatch: {} # lets you trigger it manually from the Actions tab
-
 permissions:
   contents: write
-
 jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
-
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
       - name: Install scraper dependencies
         working-directory: scraper
         run: npm install
-
       - name: Run scraper
         working-directory: scraper
         run: node scrape.js
-
-      - name: Commit updated data if changed
+      - name: Commit and push updated data if changed
         run: |
           git config user.name "standing-room-society-bot"
           git config user.email "actions@github.com"
-          git add data/shows.json
+
+          # Was only "git add data/shows.json" — silently never committed
+          # posters/, even on runs where the scraper downloaded new ones.
+          git add -A
+
           git diff --cached --quiet && echo "No changes to commit" || git commit -m "Auto-update show data $(date -u +%Y-%m-%d)"
+
+          # Rebase onto whatever's on origin/main right before pushing, in
+          # case something else (e.g. a manual push) landed on main between
+          # this job's checkout and its push — otherwise a plain `git push`
+          # gets rejected as a non-fast-forward, which is exactly what just
+          # happened. --autostash handles the edge case where the commit
+          # above left working-tree changes that would block a rebase.
+          git pull --rebase --autostash origin main
           git push
