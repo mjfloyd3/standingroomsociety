@@ -13,7 +13,8 @@
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "Digital lottery: $49 via https://www.luckyseat.com/shows/thebookofmormon-newyork — weekday entries close 9:30 AM ET day before",
+        "Digital rush: $53 via TodayTix app, released 9 AM day of performance"
       ],
       "localPosterPath": "/posters/the-book-of-mormon-eugene-oneill-theatre-vault-0000013715.jpg"
     },
@@ -28,7 +29,7 @@
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "Digital lottery: $60 via https://lottery.broadwaydirect.com/show/the-lion-king (opens 9 AM day before, closes 3 PM day before)"
       ],
       "localPosterPath": "/posters/the-lion-king-new-amsterdam-theatre-vault-0000008729.jpg"
     },
@@ -43,7 +44,7 @@
       "closes": "Aug 30, 2026",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "Digital lottery: $49 via https://www.luckyseat.com/shows/moulinrouge!themusical-newyork"
       ],
       "localPosterPath": "/posters/moulin-rouge-the-musical-hirschfeld-theatre-2019-2020.jpg"
     },
@@ -58,8 +59,9 @@
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
-      ],
+          "Digital lottery: $49 via https://www.luckyseat.com/shows/hadestown-newyork",
+          "Standing room: $39 at box office, only when sold out"
+        ],
       "localPosterPath": "/posters/hadestownwalter-kerr-theatre-2018-2019.jpg"
     },
     {
@@ -103,7 +105,7 @@
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "Digital lottery: $45 via https://www.aladdinthemusical.com/lottery"
       ],
       "localPosterPath": "/posters/aladdin-new-amsterdam-theatre-vault-0000014037.jpg"
     },
@@ -118,7 +120,7 @@
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "Digital lottery: $49 via https://www.rush.telecharge.com"
       ],
       "localPosterPath": "/posters/just-in-time-broadway-circle-in-the-square-theatre-2025.jpg"
     },
@@ -163,7 +165,8 @@
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "The Friday Forty: $40 via TodayTix app",
+        "Cancellation line: full-price last-minute releases"
       ],
       "localPosterPath": "/posters/harry-potter-and-the-cursed-childlyric-theatre-2017-2018.jpg"
     },
@@ -178,7 +181,9 @@
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "Digital lottery: $45 via https://lottery.broadwaydirect.com/show/six-ny/",
+        "Student rush: $35 at box office",
+        "Standing room: $49 at box office, only when sold out"
       ],
       "localPosterPath": "/posters/six-the-musicallena-horne-theatre-2021-2022.jpg"
     },
@@ -223,7 +228,8 @@
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "Digital lottery: $55 via https://lottery.broadwaydirect.com/show/wicked",
+        "Student rush: $45 at Gershwin Theatre box office, 10 AM Mon-Sat / noon Sun"
       ],
       "localPosterPath": "/posters/wicked-broadway-gershwin-theatre-2003.jpg"
     },
@@ -439,7 +445,7 @@
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "discount": [
-        "$49 digital lottery at rush.telecharge.com",
+        "$49 digital lottery at https://www.rush.telecharge.com",
         "$45 general rush at the box office"
       ],
       "localPosterPath": "/posters/buena-vista-social-club-broadway-gerald-schoenfeld-theatre-2025.jpg"
@@ -471,7 +477,7 @@
       "closes": "Sep 6, 2026",
       "schedule": "Limited engagement — check newworldstages.com for current weekly schedule",
       "discount": [
-        "Digital rush/lottery sometimes offered via TodayTix — check the app day-of"
+        "$39 digital lottery via https://www.rush.telecharge.com"
       ],
       "localPosterPath": "/posters/the-25th-annual-putnam-county-spelling-bee-off-broadway-new-world-stages-stage-3-2025.jpg"
     },
@@ -1071,7 +1077,8 @@
       "closes": "Aug 30, 2026",
       "schedule": "Limited engagement — check lct.org for current schedule",
       "discount": [
-        "Lincoln Center Theater offers rush tickets — check lct.org"
+        "Lincoln Center Theater offers rush tickets — check lct.org",
+        "$20 Digital Lottery via rush.telecharge.com"
       ],
       "localPosterPath": "/posters/the-whoopi-monologues-off-broadway-mitzi-e-newhouse-theatre-2026.jpg"
     },
