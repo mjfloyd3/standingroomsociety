@@ -2,55 +2,117 @@
  * scrape.js
  * Pulls current show data and writes it to ../data/shows.json
  *
- * Sources:
- *  - IBDB (ibdb.com)   → Broadway shows. IBDB is a database-backed site run by
- *                        the Broadway League, so its markup is far more stable
- *                        than editorial sites like Playbill or BroadwayWorld.
- *  - Playbill          → Off-Broadway shows. IBDB doesn't reliably cover Off-Broadway,
- *                        so Playbill's "Off-Broadway" listings page fills that gap.
+ * SOURCE: Playbill (playbill.com) for BOTH Broadway and Off-Broadway.
  *
- * IMPORTANT — READ BEFORE RUNNING:
- * I built this against my best knowledge of each site's markup, but I could not
- * test it live (my sandbox can't reach ibdb.com or playbill.com). The selectors
- * below are marked with CALIBRATE — run `node scrape.js --dry-run` locally,
- * open the target URL in your browser, inspect the actual DOM with devtools,
- * and adjust those selectors to match. Budget 30–60 min for this the first time.
- * After that, the scraper should keep working until the sites redesign.
+ * IBDB was the original plan but is dropped entirely — it returns 403
+ * Forbidden to automated requests (confirmed with both a plain fetch and a
+ * realistic browser User-Agent), which points to real bot-detection
+ * infrastructure that a simple HTTP request can't get past. Rather than
+ * take on a headless-browser dependency for this, we pivoted to Playbill,
+ * which I fetched and read directly — confirmed working, no blocking.
+ *
+ * CONFIRMED July 2026 (fetched and read directly, not guessed):
+ *  - https://playbill.com/shows/broadway and .../shows/offbroadway use the
+ *    SAME card-grid layout: each show is a "### [Title](/production/...)"
+ *    heading, optionally followed by a "Closes <date>" line (limited-run
+ *    shows only — open-ended shows have no closing line), then a theater
+ *    name line.
+ *  - Neither listing page includes street address or opening date. Street
+ *    addresses are supplied from a small static lookup table below (theater
+ *    buildings don't move, so this needs updating only when a new venue
+ *    opens — far less maintenance than scraping it fresh every day).
+ *    Opening dates are NOT available from this source; shows without a
+ *    prior known value will show "TBD" until filled in by hand or a future
+ *    scraper enhancement pulls them from Playbill's "What's Currently
+ *    Playing" article (playbill.com/article/whats-currently-playing-on-broadway),
+ *    which does have them but in a harder-to-parse prose format.
+ *
+ * CALIBRATION STATUS: the card-parsing logic climbs from each show's <a
+ * href="/production/..."> link up to a small ancestor container and reads
+ * its text — this avoids depending on specific CSS class names (which I
+ * could not inspect directly, since my fetch tool renders pages to
+ * markdown/text rather than exposing raw HTML with classes). This should
+ * be resilient to minor styling changes but has NOT been run against the
+ * live site yet. Please run --dry-run and sanity-check a handful of shows
+ * before trusting a full run.
  *
  * Usage:
  *   node scrape.js                 → scrapes live, overwrites ../data/shows.json
  *   node scrape.js --dry-run       → scrapes live, prints result, does NOT write the file
- *   node scrape.js --skip-schedules → skips the slow per-show schedule fetch (useful while
- *                                     calibrating the listing-page selectors first)
- *
- * Note: fetching exact weekly schedules means visiting each Broadway show's own
- * IBDB page one at a time (with a delay between requests to be polite), so a
- * full run takes a few minutes rather than a few seconds. That's expected.
  */
 
 const fs = require('fs');
 const path = require('path');
 const cheerio = require('cheerio');
 
-const IBDB_URL = 'https://www.ibdb.com/shows/current'; // CALIBRATE: confirm this is the "currently running" listing URL
-const PLAYBILL_OFFBWAY_URL = 'https://playbill.com/theatres/off-broadway'; // CALIBRATE: confirm current URL/slug
-const IBDB_BASE = 'https://www.ibdb.com';
-const SCHEDULE_FETCH_DELAY_MS = 800; // be polite — one request at a time, not a burst
-
+const BROADWAY_URL = 'https://playbill.com/shows/broadway';
+const OFFBROADWAY_URL = 'https://playbill.com/shows/offbroadway';
 const OUTPUT_PATH = path.join(__dirname, '..', 'data', 'shows.json');
 const DRY_RUN = process.argv.includes('--dry-run');
-const SKIP_SCHEDULES = process.argv.includes('--skip-schedules'); // handy while calibrating listing selectors first
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+// Static theater address lookup. Buildings don't move, so this is a
+// one-time cost, not an ongoing scrape target. Add a line here whenever a
+// new venue shows up in scraper output as missing an address (the scraper
+// will warn you by name when that happens).
+const THEATER_ADDRESSES = {
+  "Al Hirschfeld Theatre": "302 W 45th St, New York, NY 10036",
+  "Ambassador Theatre": "219 W 49th St, New York, NY 10019",
+  "August Wilson Theatre": "245 W 52nd St, New York, NY 10019",
+  "Belasco Theatre": "111 W 44th St, New York, NY 10036",
+  "Bernard B. Jacobs Theatre": "242 W 45th St, New York, NY 10036",
+  "Booth Theatre": "222 W 45th St, New York, NY 10036",
+  "Broadhurst Theatre": "235 W 44th St, New York, NY 10036",
+  "Broadway Theatre": "1681 Broadway (at W. 53rd St.), New York, NY 10019",
+  "Circle in the Square Theatre": "235 W 50th St, New York, NY 10019",
+  "Ethel Barrymore Theatre": "243 W 47th St, New York, NY 10036",
+  "Eugene O'Neill Theatre": "230 W 49th St, New York, NY 10019",
+  "Gerald Schoenfeld Theatre": "236 W 45th St, New York, NY 10036",
+  "Gershwin Theatre": "222 W 51st St, New York, NY 10019",
+  "Hayes Theater": "240 W 44th St, New York, NY 10036",
+  "Hudson Theatre": "139-141 W 44th St, New York, NY 10036",
+  "Imperial Theatre": "249 W 45th St, New York, NY 10036",
+  "James Earl Jones Theatre": "138 W 48th St, New York, NY 10036",
+  "John Golden Theatre": "252 W 45th St, New York, NY 10036",
+  "Lena Horne Theatre": "256 W 47th St, New York, NY 10036",
+  "Longacre Theatre": "220 W 48th St, New York, NY 10036",
+  "Lunt-Fontanne Theatre": "205 W 46th St, New York, NY 10036",
+  "Lyceum Theatre": "149 W 45th St, New York, NY 10036",
+  "Lyric Theatre": "213 W 42nd St, New York, NY 10036",
+  "Majestic Theatre": "245 W 44th St, New York, NY 10036",
+  "Marquis Theatre": "1535 Broadway (between 45th and 46th Streets), New York, NY 10036",
+  "Minskoff Theatre": "200 W 45th St, New York, NY 10036",
+  "Music Box Theatre": "239 W 45th St, New York, NY 10036",
+  "Nederlander Theatre": "208 W 41st St, New York, NY 10036",
+  "Neil Simon Theatre": "250 W 52nd St, New York, NY 10019",
+  "New Amsterdam Theatre": "214 W 42nd St, New York, NY 10036",
+  "Palace Theatre": "160 W 47th St, New York, NY 10036",
+  "Richard Rodgers Theatre": "226 W 46th St, New York, NY 10036",
+  "Samuel J. Friedman Theatre": "261 W 47th St, New York, NY 10036",
+  "Shubert Theatre": "225 W 44th St, New York, NY 10036",
+  "St. James Theatre": "246 W 44th St, New York, NY 10036",
+  "Stephen Sondheim Theatre": "124 W 43rd St, New York, NY 10036",
+  "Studio 54": "254 W 54th St, New York, NY 10019",
+  "Todd Haimes Theatre": "227 W 42nd St, New York, NY 10036",
+  "Vivian Beaumont Theater": "150 W 65th St, New York, NY 10023",
+  "Vivian Beaumont Theatre": "150 W 65th St, New York, NY 10023",
+  "Walter Kerr Theatre": "219 W 48th St, New York, NY 10036",
+  "Winter Garden Theatre": "1634 Broadway (at W. 50th St.), New York, NY 10019",
+  "New World Stages Stage 1": "340 W 50th St, New York, NY 10019",
+  "New World Stages Stage 2": "340 W 50th St, New York, NY 10019",
+  "New World Stages Stage 3": "340 W 50th St, New York, NY 10019",
+  "New World Stages Stage 4": "340 W 50th St, New York, NY 10019",
+  "New World Stages Stage 5": "340 W 50th St, New York, NY 10019",
+  "Laura Pels Theatre": "111 W 46th St, New York, NY 10036",
+  "Mitzi E. Newhouse Theatre": "150 W 65th St, New York, NY 10023",
+  "Claire Tow Theater": "150 W 65th St, New York, NY 10023"
+};
 
 async function fetchHtml(url) {
   const res = await fetch(url, {
     headers: {
-      // A real UA string avoids some basic bot-blocking. Be a good citizen:
-      // this scraper runs once a day, not on every page load.
-      'User-Agent': 'Mozilla/5.0 (compatible; StandingRoomSocietyBot/1.0; +https://github.com/YOUR_USERNAME/YOUR_REPO)'
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.9'
     }
   });
   if (!res.ok) {
@@ -60,191 +122,130 @@ async function fetchHtml(url) {
 }
 
 /**
- * Parse IBDB's current-shows listing into our show shape.
- * CALIBRATE: the selectors below are placeholders based on typical
- * database-listing markup (a repeated card/row per show). Open the page,
- * find the real container + field selectors, and replace these.
+ * Parse a Playbill listing page (/shows/broadway or /shows/offbroadway —
+ * confirmed identical structure) into our show shape.
+ *
+ * Strategy: find each show's detail-page link, then climb up a few parent
+ * levels to the smallest ancestor whose text is short enough to be a single
+ * card (not the whole page). This avoids hardcoding CSS class names I
+ * couldn't inspect directly.
  */
-function parseIbdb(html) {
+function parsePlaybillListing(html, kind) {
   const $ = cheerio.load(html);
   const shows = [];
+  const seen = new Set();
+  const missingAddresses = new Set();
 
-  $('.production-listing, .show-card, .listing-row').each((_, el) => {
-    const $el = $(el);
+  $('a[href*="/production/"]').each((_, el) => {
+    const $link = $(el);
+    const href = $link.attr('href') || '';
+    if (!href || seen.has(href)) return;
 
-    const title = $el.find('.production-title, .show-title, h3').first().text().trim();
-    const theater = $el.find('.theatre-name, .venue-name').first().text().trim();
-    const address = $el.find('.theatre-address, .venue-address').first().text().trim();
-    const opened = $el.find('.opening-date, .opened-date').first().text().trim().replace(/^Opened:?\s*/i, '');
-    const closesRaw = $el.find('.closing-date').first().text().trim().replace(/^Closed:?\s*/i, '');
-    // CALIBRATE: the link to the show's own IBDB page — usually wraps the title.
-    // We need this to visit the page and pull its performance-schedule table.
-    const hrefRaw = $el.find('a').first().attr('href') || '';
-    const detailUrl = hrefRaw ? new URL(hrefRaw, IBDB_BASE).toString() : null;
-
-    if (!title) return; // skip anything we failed to parse — better to miss a row than write garbage
-
-    shows.push({
-      title,
-      kind: 'broadway',
-      theater: theater || 'TBD — confirm on IBDB',
-      address: address || 'TBD — confirm on IBDB',
-      opened: opened || 'TBD',
-      closes: closesRaw && !/open|ongoing/i.test(closesRaw) ? closesRaw : null,
-      schedule: 'Standard 8-show week, dark Mon — confirm exact days on the show\'s own site',
-      discount: ['Check the show\'s official site or TodayTix for lottery/rush availability'],
-      _detailUrl: detailUrl // internal only — stripped before writing shows.json
-    });
-  });
-
-  return shows;
-}
-
-/**
- * Parse Playbill's Off-Broadway listing.
- * CALIBRATE: same caveat as above — placeholder selectors.
- */
-function parsePlaybillOffBroadway(html) {
-  const $ = cheerio.load(html);
-  const shows = [];
-
-  $('.show-listing, article.show, .card').each((_, el) => {
-    const $el = $(el);
-
-    const title = $el.find('.title, h2, h3').first().text().trim();
-    const theater = $el.find('.venue, .theatre').first().text().trim();
-    const address = $el.find('.address').first().text().trim();
-
+    const title = $link.text().trim();
     if (!title) return;
 
+    seen.add(href);
+
+    // Climb from the link toward a card boundary. The correct stopping
+    // rule is structural: never climb into a container that holds links to
+    // MORE THAN ONE DISTINCT show. Note a single card typically has several
+    // links to its OWN show (thumbnail image, heading, "View Details"
+    // button) — so we count distinct hrefs, not raw anchor count, or every
+    // card would look "multi-show" after just one climb.
+    let $card = $link;
+    for (let i = 0; i < 6; i++) {
+      const parent = $card.parent();
+      if (!parent.length) break;
+      const hrefsInParent = new Set(
+        parent.find('a[href*="/production/"]').map((i, a) => $(a).attr('href')).get()
+      );
+      if (hrefsInParent.size > 1) break; // parent spans multiple shows — stop here
+      $card = parent;
+    }
+
+    const cardText = $card.text().replace(/\s+/g, ' ').trim();
+
+    const closesMatch = cardText.match(/Closes\s+([A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4})/);
+    const closes = closesMatch ? closesMatch[1] : null;
+
+    let remainder = cardText
+      .replace(title, '')
+      .replace(/Closes\s+[A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4}/, '')
+      .replace(/Begins Previews\s+[A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4}/, '')
+      .replace(/In Previews\s*\|?\s*Opens\s+[A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4}/, '')
+      .replace(/View Details.*$/, '')
+      .replace(/Buy Tickets.*$/, '')
+      .replace(/Trending/, '')
+      .replace(/2026 Tony Winner/, '')
+      .trim();
+
+    const theater = remainder || null;
+    if (!theater) return;
+
+    const address = THEATER_ADDRESSES[theater];
+    if (!address) missingAddresses.add(theater);
+
     shows.push({
       title,
-      kind: 'off-broadway',
-      theater: theater || 'TBD — confirm on Playbill',
-      address: address || 'TBD — confirm on Playbill',
-      opened: 'TBD — confirm on Playbill',
-      closes: null,
-      schedule: 'Confirm current weekly schedule on the venue\'s site',
-      discount: ['Check TodayTix or the show\'s own site for rush/lottery offers']
+      kind,
+      theater,
+      address: address || `${theater}, New York, NY`,
+      opened: 'TBD — not available from this source',
+      closes,
+      schedule: "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
+      discount: ["Check the show's official site or TodayTix for lottery/rush availability"]
     });
   });
+
+  if (missingAddresses.size > 0) {
+    console.warn(`  ! no address on file for: ${[...missingAddresses].join(', ')}`);
+    console.warn(`    add these to THEATER_ADDRESSES in scrape.js for accurate street addresses`);
+  }
 
   return shows;
 }
 
 /**
- * Visit a single show's IBDB page and extract its weekly performance schedule.
- * CALIBRATE: IBDB show pages typically have a "Performance Schedule" or
- * "Schedule" section listing day + time pairs (e.g. "Tuesday 7:00 PM").
- * Inspect a real show page and adjust the selector + row parsing below.
- */
-function parseShowSchedule(html) {
-  const $ = cheerio.load(html);
-
-  // CALIBRATE: adjust to the real container. Common patterns on
-  // database-driven sites are a definition list or table with one
-  // row per performance day.
-  const rows = $('.performance-schedule tr, .schedule-table tr, .schedule-list li');
-
-  if (rows.length === 0) return null; // couldn't find it — caller keeps the generic placeholder
-
-  const parts = [];
-  rows.each((_, row) => {
-    const text = $(row).text().replace(/\s+/g, ' ').trim();
-    if (text) parts.push(text);
-  });
-
-  if (parts.length === 0) return null;
-
-  // Days IBDB doesn't list a performance for are implicitly dark.
-  const listedDays = parts.map(p => p.split(' ')[0]);
-  const allDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-  const darkDays = allDays.filter(d => !listedDays.includes(d));
-  const darkNote = darkDays.length ? ` — dark ${darkDays.map(d => d.slice(0,3)).join('/')}` : '';
-
-  return parts.join(' · ') + darkNote;
-}
-
-/**
- * Fetch schedules for each Broadway show one at a time (politeness delay
- * between requests). Mutates each show object in place, then strips the
- * internal _detailUrl field before returning.
- */
-async function attachSchedules(broadwayShows) {
-  for (const show of broadwayShows) {
-    if (!show._detailUrl) continue;
-    try {
-      await sleep(SCHEDULE_FETCH_DELAY_MS);
-      const html = await fetchHtml(show._detailUrl);
-      const schedule = parseShowSchedule(html);
-      if (schedule) {
-        show.schedule = schedule;
-      }
-      // else: leave the generic placeholder set in parseIbdb() — the
-      // merge step will fall back to any prior hand-curated value.
-    } catch (err) {
-      console.warn(`  ! couldn't fetch schedule for "${show.title}": ${err.message}`);
-      // leave the generic placeholder — don't let one bad page abort the run
-    }
-    delete show._detailUrl;
-  }
-  return broadwayShows;
-}
-
-/**
- * Merge freshly-scraped shows with the existing JSON file:
- *  - Preserve any manually-curated fields (like a hand-written schedule)
- *    for shows we already know about, keyed by title.
- *  - Add new shows we haven't seen before.
- *  - Drop shows no longer present in either source (they've closed).
+ * Merge freshly-scraped shows with the existing JSON file: preserve any
+ * hand-curated schedule/discount text for shows we already know about
+ * (keyed by title) instead of clobbering it with the generic placeholder.
  */
 function mergeWithExisting(scraped, existing) {
   const existingByTitle = new Map(existing.shows.map(s => [s.title, s]));
 
-  const merged = scraped.map(fresh => {
+  return scraped.map(fresh => {
     const prior = existingByTitle.get(fresh.title);
-    if (!prior) return fresh; // brand new show
-    // Keep the previously curated schedule/discount text if the scraper
-    // only returned a generic placeholder — avoids clobbering good data
-    // with "TBD" on days the scrape partially fails.
+    if (!prior) return fresh;
     return {
       ...fresh,
+      opened: fresh.opened.startsWith('TBD') && prior.opened ? prior.opened : fresh.opened,
       schedule: fresh.schedule.startsWith('Standard 8-show week, dark Mon — confirm')
         ? prior.schedule
         : fresh.schedule,
-      discount: fresh.discount[0].startsWith('Check the show')
+      discount: fresh.discount[0].startsWith("Check the show's official site")
         ? prior.discount
         : fresh.discount
     };
   });
-
-  return merged;
 }
 
 async function main() {
-  console.log('Fetching IBDB (Broadway)…');
-  const ibdbHtml = await fetchHtml(IBDB_URL);
-  const broadwayShows = parseIbdb(ibdbHtml);
+  console.log('Fetching Playbill (Broadway)…');
+  const broadwayHtml = await fetchHtml(BROADWAY_URL);
+  const broadwayShows = parsePlaybillListing(broadwayHtml, 'broadway');
   console.log(`  → parsed ${broadwayShows.length} Broadway shows`);
 
-  if (SKIP_SCHEDULES) {
-    broadwayShows.forEach(s => delete s._detailUrl);
-    console.log('  --skip-schedules set, leaving generic schedule placeholders');
-  } else {
-    console.log(`  → fetching individual schedules (${SCHEDULE_FETCH_DELAY_MS}ms delay between requests, this takes a while)…`);
-    await attachSchedules(broadwayShows);
-  }
-
   console.log('Fetching Playbill (Off-Broadway)…');
-  const playbillHtml = await fetchHtml(PLAYBILL_OFFBWAY_URL);
-  const offBroadwayShows = parsePlaybillOffBroadway(playbillHtml);
+  const offBroadwayHtml = await fetchHtml(OFFBROADWAY_URL);
+  const offBroadwayShows = parsePlaybillListing(offBroadwayHtml, 'off-broadway');
   console.log(`  → parsed ${offBroadwayShows.length} Off-Broadway shows`);
 
   const scraped = [...broadwayShows, ...offBroadwayShows];
 
   if (scraped.length === 0) {
-    console.error('Scraped zero shows from both sources — selectors are almost');
-    console.error('certainly stale. Aborting without touching shows.json.');
+    console.error('Scraped zero shows — the card-parsing heuristic is almost');
+    console.error('certainly broken against the live page. Aborting without');
+    console.error('touching shows.json.');
     process.exit(1);
   }
 
@@ -253,7 +254,7 @@ async function main() {
 
   const output = {
     lastUpdated: new Date().toISOString().slice(0, 10),
-    source: 'auto-generated by scraper/scrape.js (IBDB + Playbill)',
+    source: 'auto-generated by scraper/scrape.js (Playbill /shows/broadway + /shows/offbroadway)',
     shows: merged
   };
 
@@ -269,6 +270,5 @@ async function main() {
 
 main().catch(err => {
   console.error('Scrape failed:', err.message);
-  // Exit non-zero so the GitHub Action does NOT commit a broken/empty file.
   process.exit(1);
 });
