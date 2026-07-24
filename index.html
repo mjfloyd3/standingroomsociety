@@ -13,7 +13,8 @@
 <body>
 
 <header>
-  <img src="srs-logo.png" alt="Standing Room Society: The Cheap Seats Directory" width="500" style="max-width:100%;"/>
+  <img src="srs-logo.png" alt="Standing Room Society: The Cheap Seats Directory" width="500" style="max-width:100%;" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='block';"/>
+  <h1 id="logoFallback" style="display:none;">Standing Room <span>Society</span></h1>
   <span class="tagline">The Cheap Seats Directory</span>
   <div class="updated" id="updatedText">Loading current show data…</div>
 </header>

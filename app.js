@@ -99,6 +99,26 @@ function sortKey(s){
   return s.title.replace(/^the\s+/i, '').toLowerCase();
 }
 
+// Parses strings like "Aug 16, 2026" into a Date. Returns null if the
+// string doesn't parse — callers should treat that as "unknown", not "far off".
+function parseShowDate(str){
+  if (!str) return null;
+  const d = new Date(str);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+// A show counts as "closing soon" if its closing date is today or within
+// the next 21 days. Already-past dates don't count — that's a stale-data
+// problem, not an urgency signal, and showing "closing soon" on a show
+// that already closed would be actively misleading.
+function isClosingSoon(closesStr){
+  const closeDate = parseShowDate(closesStr);
+  if (!closeDate) return false;
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const daysUntil = (closeDate - new Date()) / msPerDay;
+  return daysUntil >= 0 && daysUntil <= 21;
+}
+
 function render(){
   let filtered = shows.filter(s => activeFilter === 'all' || s.kind === activeFilter);
   filtered = filtered.slice().sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
@@ -138,7 +158,7 @@ function render(){
         <div>
           <div class="col-label">Run</div>
           <div class="dates-row"><span class="lbl">Opened</span>${esc(s.opened)}</div>
-          <div class="dates-row"><span class="lbl">Closes</span>${s.closes ? esc(s.closes) : '<span class="open-ended">Open run</span>'}</div>
+          <div class="dates-row"><span class="lbl">Closes</span>${s.closes ? esc(s.closes) : '<span class="open-ended">Open run</span>'}${s.closes && isClosingSoon(s.closes) ? '<span class="closing-soon-badge">Closing Soon</span>' : ''}</div>
         </div>
         <div>
           <div class="col-label">Schedule</div>

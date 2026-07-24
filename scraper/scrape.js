@@ -133,31 +133,60 @@ async function fetchHtml(url) {
 function parsePlaybillListing(html, kind) {
   const $ = cheerio.load(html);
   const shows = [];
-  const seen = new Set();
   const missingAddresses = new Set();
 
+  // Badge labels that sit inside the SAME link as a show's thumbnail image
+  // (e.g. "Trending", "2026 Tony Winner") and would otherwise get mistaken
+  // for the title if we just grabbed the first link with any text.
+  const BADGE_WORDS = /^(Trending|20\d\d Tony Winner)$/i;
+
+  // Collect distinct show URLs first, THEN decide which of possibly several
+  // links to that URL is the real title link — rather than processing link
+  // elements one at a time, which is what let a badge label "claim" a show
+  // before its real heading link was ever seen.
+  const hrefs = new Set();
   $('a[href*="/production/"]').each((_, el) => {
-    const $link = $(el);
-    const href = $link.attr('href') || '';
-    if (!href || seen.has(href)) return;
+    const href = $(el).attr('href');
+    if (href) hrefs.add(href);
+  });
 
-    const title = $link.text().trim();
-    if (!title) return;
+  hrefs.forEach(href => {
+    const $anchorsForHref = $(`a[href="${href}"]`);
 
-    seen.add(href);
+    // The confirmed pattern on both listing pages is a heading link:
+    // "### [Title](/production/...)" — i.e. the real title is wrapped in
+    // an h1–h5. Prefer that anchor specifically over a thumbnail/badge link
+    // that happens to share the same href.
+    let $titleLink = $anchorsForHref.filter((_, a) => $(a).closest('h1,h2,h3,h4,h5').length > 0).first();
 
-    // Climb from the link toward a card boundary. The correct stopping
-    // rule is structural: never climb into a container that holds links to
-    // MORE THAN ONE DISTINCT show. Note a single card typically has several
-    // links to its OWN show (thumbnail image, heading, "View Details"
+    if (!$titleLink.length) {
+      // No heading match — fall back to the longest non-badge text among
+      // this show's links (badge words are short, real titles are longer).
+      let best = null;
+      $anchorsForHref.each((_, a) => {
+        const text = $(a).text().trim();
+        if (!text || BADGE_WORDS.test(text)) return;
+        if (!best || text.length > best.length) best = text;
+      });
+      if (!best) return; // every link for this show was empty or a badge word — skip rather than guess
+      $titleLink = $anchorsForHref.filter((_, a) => $(a).text().trim() === best).first();
+    }
+
+    const title = $titleLink.text().trim();
+    if (!title || BADGE_WORDS.test(title)) return;
+
+    // Climb from the title link toward a card boundary. The correct
+    // stopping rule is structural: never climb into a container that holds
+    // links to MORE THAN ONE DISTINCT show. A single card typically has
+    // several links to its OWN show (thumbnail, heading, "View Details"
     // button) — so we count distinct hrefs, not raw anchor count, or every
     // card would look "multi-show" after just one climb.
-    let $card = $link;
+    let $card = $titleLink;
     for (let i = 0; i < 6; i++) {
       const parent = $card.parent();
       if (!parent.length) break;
       const hrefsInParent = new Set(
-        parent.find('a[href*="/production/"]').map((i, a) => $(a).attr('href')).get()
+        parent.find('a[href*="/production/"]').map((_, a) => $(a).attr('href')).get()
       );
       if (hrefsInParent.size > 1) break; // parent spans multiple shows — stop here
       $card = parent;
@@ -175,8 +204,8 @@ function parsePlaybillListing(html, kind) {
       .replace(/In Previews\s*\|?\s*Opens\s+[A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4}/, '')
       .replace(/View Details.*$/, '')
       .replace(/Buy Tickets.*$/, '')
-      .replace(/Trending/, '')
-      .replace(/2026 Tony Winner/, '')
+      .replace(/Trending/gi, '')
+      .replace(/20\d\d Tony Winner/gi, '')
       .trim();
 
     const theater = remainder || null;
