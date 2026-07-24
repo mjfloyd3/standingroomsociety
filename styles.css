@@ -42,8 +42,11 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--tape);outline-offse
 
 /* ---------- Header ---------- */
 header{
-  padding:22px 24px 44px;
+  padding:22px 24px 10px;
   text-align:center;
+  p {
+    margin-top: 0;
+  }
 }
 h1{
   font-family:var(--display);
@@ -98,7 +101,7 @@ h1 span{
 /* ---------- Controls ---------- */
 .controls{
   max-width:1140px;
-  margin:34px auto 0;
+  margin: 14px auto 0;
   padding:0 24px;
   display:flex;
   justify-content:center;
@@ -136,19 +139,18 @@ h1 span{
   margin:22px auto 88px;
   padding:0 24px;
 }
-.card-list{
-  display:flex;
-  flex-direction:column;
-}
 .show-card{
   border-bottom:1px solid var(--hairline);
   padding:24px 6px;
   display:grid;
-  grid-template-columns:1.5fr 1.4fr 1fr 1.3fr 1.6fr;
+  grid-template-columns:92px 1.5fr 1.4fr 1fr 1.3fr 1.6fr;
   gap:20px;
   align-items:start;
   position:relative;
   transition:background .18s ease;
+}
+.poster-cell{
+  width:92px;
 }
 /* hover rail: a strip of the tape */
 .show-card::before{
@@ -180,29 +182,6 @@ h1 span{
   font-weight:600;
   color:var(--ink);
   line-height:1.22;
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  gap:8px;
-}
-/* "Closing Soon" now owns the bold torn-tape snipe treatment that used to
-   sit on "Open run". Open run is the ordinary, unremarkable default for
-   most shows — it shouldn't compete for attention with the one status
-   that's actually worth flagging. */
-.closing-soon-badge{
-  display:inline-block;
-  font-family:var(--deco);
-  font-weight:500;
-  font-style:normal;
-  font-size:0.62rem;
-  letter-spacing:0.14em;
-  text-indent:0.14em;
-  text-transform:uppercase;
-  color:#fdfbf7;
-  background:var(--tape);
-  padding:3px 9px 2px;
-  transform:rotate(-1.6deg);
-  clip-path:var(--tape-tear);
 }
 .theater-name{font-weight:600;color:var(--ink);}
 .theater-addr{font-size:0.8rem;color:var(--ink-soft);margin-top:3px;}
@@ -216,16 +195,25 @@ h1 span{
   text-transform:uppercase;
   margin-right:6px;
 }
-/* "Open run" — quiet, not a badge. This is the ordinary/default state for
-   most shows on the site, so it shouldn't compete visually with the one
-   thing that actually deserves attention: a show closing soon. */
+/* "Open run" — a mini snipe */
 .open-ended{
+  color:var(--ink);
+}
+.closing-soon-badge{
+  display:inline-block;
   font-family:var(--deco);
   font-weight:500;
-  font-style:italic;
-  font-size:0.78rem;
-  letter-spacing:0.02em;
-  color:var(--ink-faint);
+  font-style:normal;
+  font-size:0.62rem;
+  letter-spacing:0.14em;
+  text-indent:0.14em;
+  text-transform:uppercase;
+  color:#fdfbf7;
+  background:var(--tape);
+  padding:3px 9px 2px;
+  margin-left:8px;
+  transform:rotate(-1.6deg);
+  clip-path:var(--tape-tear);
 }
 .schedule{font-size:0.83rem;line-height:1.65;color:var(--ink-soft);}
 .discount{font-size:0.83rem;line-height:1.6;color:var(--ink);}
@@ -240,7 +228,7 @@ h1 span{
 
 .header-row{
   display:grid;
-  grid-template-columns:1.5fr 1.4fr 1fr 1.3fr 1.6fr;
+  grid-template-columns:92px 1.5fr 1.4fr 1fr 1.3fr 1.6fr;
   gap:20px;
   padding:0 6px 12px;
   font-family:var(--deco);
@@ -305,7 +293,7 @@ footer a{color:var(--tape-deep);}
   .show-card::before{left:-12px;}
 }
 @media (max-width: 560px){
-  header{padding:52px 18px 34px;}
+  header{padding: 20px 5px 5px;}
   h1 span{margin-left:-0.6em;}
   .tagline{letter-spacing:0.3em;padding-left:0.3em;}
   .tab{margin-right:16px;letter-spacing:0.1em;}

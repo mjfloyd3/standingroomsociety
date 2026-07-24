@@ -64,7 +64,7 @@ async function loadShowData(){
   }catch(err){
     console.warn('Could not load data/shows.json, using embedded fallback data.', err);
     if(updatedEl){
-      updatedEl.textContent = `Showing built-in fallback data (couldn't reach data/shows.json) — always confirm on the show's official site before you go`;
+      updatedEl.textContent = ``;
     }
   }
   render();
@@ -146,6 +146,11 @@ function render(){
       const card = document.createElement('div');
       card.className = 'show-card';
       card.innerHTML = `
+        <div class="poster-cell">
+          ${s.localPosterPath
+            ? `<img class="show-poster" src="${esc(s.localPosterPath)}" alt="${esc(s.title)} poster art" width="92" height="143" loading="lazy" onerror="this.remove()">`
+            : ''}
+        </div>
         <div>
           <div class="col-label">Show</div>
           <div class="show-title">${esc(s.title)}</div>

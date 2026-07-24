@@ -36,6 +36,35 @@
  * live site yet. Please run --dry-run and sanity-check a handful of shows
  * before trusting a full run.
  *
+ * POSTERS: each show's poster art is downloaded and cached locally to
+ * ../posters/<playbill-slug>.<ext> rather than hotlinked from
+ * Playbill's CDN. The URL is pulled from the og:image meta tag on each
+ * show's OWN production page — NOT from an <img> tag on the listing page.
+ * This was confirmed necessary by fetching a production page directly:
+ * the listing page's thumbnail images are lazy-loaded via JS and come
+ * back with an empty src in raw HTML, which Cheerio can't resolve, while
+ * og:image is server-rendered and reliably present. This does mean one
+ * extra HTTP request per NEW show (fetching its production page) — but
+ * cachePoster() checks the local cache first and skips that fetch
+ * entirely for any show already cached, so a normal day's run only pays
+ * that cost for shows that are new since the last scrape.
+ *
+ * IMPORTANT: og:image itself is NOT used as-is. It points at Playbill's
+ * CDN-transformed 1200x630 landscape crop (built for social-share link
+ * previews), not the actual vertical Playbill cover. stripPlaybillImageTransform()
+ * strips that transform segment out of the URL before downloading, which
+ * — confirmed by testing directly — resolves to the original untransformed
+ * cover art. Skipping this step is what produced visibly wrong/cropped
+ * images in an earlier version of this scraper.
+ *
+ * Cache key is the Playbill production slug (from the /production/... URL),
+ * NOT a title-derived slug — this avoids collisions between revivals of
+ * the same title and avoids orphaning a cached poster if a title's
+ * punctuation/casing shifts between scrapes. Posters for shows that drop
+ * out of the merged list (closed, delisted, etc.) are deleted at the end
+ * of each run. --dry-run skips both the download and the cleanup step,
+ * since neither should touch disk during a dry run.
+ *
  * Usage:
  *   node scrape.js                 → scrapes live, overwrites ../data/shows.json
  *   node scrape.js --dry-run       → scrapes live, prints result, does NOT write the file
@@ -48,6 +77,7 @@ const cheerio = require('cheerio');
 const BROADWAY_URL = 'https://playbill.com/shows/broadway';
 const OFFBROADWAY_URL = 'https://playbill.com/shows/offbroadway';
 const OUTPUT_PATH = path.join(__dirname, '..', 'data', 'shows.json');
+const POSTER_DIR = path.join(__dirname, '..', 'posters');
 const DRY_RUN = process.argv.includes('--dry-run');
 
 // Static theater address lookup. Buildings don't move, so this is a
@@ -119,6 +149,140 @@ async function fetchHtml(url) {
     throw new Error(`Fetch failed for ${url}: ${res.status} ${res.statusText}`);
   }
   return res.text();
+}
+
+function extractPlaybillSlug(href) {
+  // e.g. "/production/hadestownwalter-kerr-theatre-2018-2019" or a full URL
+  // with the same path — either way, take everything after "/production/".
+  const match = href.match(/\/production\/([^/?#]+)/);
+  return match ? match[1] : null;
+}
+
+/**
+ * Fetch a show's own Playbill production page and pull the poster URL from
+ * its og:image meta tag. This is server-rendered (confirmed by fetching
+ * playbill.com/production/hadestownwalter-kerr-theatre-2018-2019 directly
+ * and inspecting the raw HTML head), unlike the listing page's thumbnail
+ * <img> tags, which come back with an empty src because they're populated
+ * client-side by JS after load — Cheerio can't see that, so this is the
+ * only reliable source for the real poster URL without a headless browser.
+ */
+async function fetchPosterUrl(productionUrl) {
+  const html = await fetchHtml(productionUrl);
+  const $ = cheerio.load(html);
+  return $('meta[property="og:image"]').attr('content') || null;
+}
+
+/**
+ * Playbill's CDN serves cover images through a Craft CMS image-transform
+ * URL segment — e.g. "_1200x630_crop_center-center_82_none/" — inserted
+ * right before the filename. og:image always points at the 1200x630
+ * variant (built for social-share link previews), which is a landscape
+ * crop of the actual vertical Playbill cover, not the cover itself.
+ *
+ * CONFIRMED by testing directly: dropping the transform segment entirely
+ * (https://assets.playbill.com/playbill-covers/<filename>, no folder in
+ * between) still resolves and serves the original, untransformed cover —
+ * the real portrait artwork, not a pre-cropped landscape slice of it.
+ */
+function stripPlaybillImageTransform(url) {
+  return url.replace(/\/_\d+x\d+_[a-z0-9_-]+\//i, '/');
+}
+
+/**
+ * Download and cache one show's poster image, keyed by Playbill slug so
+ * revivals of the same title (or minor title-text edits between scrapes)
+ * can't collide or orphan each other. Skips BOTH the production-page fetch
+ * and the image download entirely if a file for this slug already exists —
+ * so on a normal day this only does real work for genuinely new shows.
+ *
+ * Failures here are non-fatal on purpose: a bad/missing poster for one
+ * show shouldn't abort the whole scrape the way a zero-shows parse does.
+ */
+async function cachePoster(show) {
+  if (!show.slug || !show.productionUrl) return null;
+
+  // Check cache first — this is the step that saves us from fetching every
+  // show's production page on every run. Extension is unknown until we've
+  // actually fetched a posterUrl once, so check for any file starting with
+  // the slug rather than assuming a specific extension.
+  const alreadyCached = fs.existsSync(POSTER_DIR)
+    ? fs.readdirSync(POSTER_DIR).find(f => f.startsWith(`${show.slug}.`))
+    : null;
+  if (alreadyCached) {
+    return `/posters/${alreadyCached}`;
+  }
+
+  try {
+    const rawPosterUrl = await fetchPosterUrl(show.productionUrl);
+    if (!rawPosterUrl) {
+      console.warn(`  ! no og:image found for "${show.title}" (${show.productionUrl})`);
+      return null;
+    }
+    const posterUrl = stripPlaybillImageTransform(rawPosterUrl);
+
+    const ext = path.extname(new URL(posterUrl).pathname) || '.jpg';
+    const filename = `${show.slug}${ext}`;
+    const destPath = path.join(POSTER_DIR, filename);
+
+    const res = await fetch(posterUrl);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const buffer = Buffer.from(await res.arrayBuffer());
+    fs.writeFileSync(destPath, buffer);
+    return `/posters/${filename}`;
+  } catch (err) {
+    console.warn(`  ! poster caching failed for "${show.title}": ${err.message}`);
+    return null;
+  }
+}
+
+async function cachePosters(shows) {
+  if (!fs.existsSync(POSTER_DIR)) fs.mkdirSync(POSTER_DIR, { recursive: true });
+
+  let cached = 0;
+  let fetched = 0;
+  for (const show of shows) {
+    const wasAlreadyCached = fs.existsSync(POSTER_DIR)
+      && fs.readdirSync(POSTER_DIR).some(f => f.startsWith(`${show.slug}.`));
+
+    show.localPosterPath = await cachePoster(show);
+
+    if (show.localPosterPath) {
+      cached++;
+      if (!wasAlreadyCached) fetched++;
+    }
+  }
+  console.log(`  → ${cached}/${shows.length} posters cached (${fetched} newly fetched this run)`);
+}
+
+/**
+ * Delete any cached poster whose slug is no longer in the current merged
+ * show list — i.e. the show has closed (or dropped out of Playbill's
+ * listings for some other reason). Runs against the final MERGED list, not
+ * the raw scrape, so it only ever acts on a known-good, fully-resolved show
+ * set — never against a partial/failed scrape (which would already have
+ * aborted before this point, per the zero-shows guard in main()).
+ */
+function cleanupClosedShowPosters(currentShows) {
+  if (!fs.existsSync(POSTER_DIR)) return;
+
+  const activeFilenames = new Set(
+    currentShows
+      .filter(show => show.localPosterPath)
+      .map(show => path.basename(show.localPosterPath))
+  );
+
+  const existingFiles = fs.readdirSync(POSTER_DIR);
+  let removed = 0;
+
+  for (const file of existingFiles) {
+    if (!activeFilenames.has(file)) {
+      fs.unlinkSync(path.join(POSTER_DIR, file));
+      removed++;
+    }
+  }
+
+  console.log(`  → poster cleanup: removed ${removed}, ${activeFilenames.size} active`);
 }
 
 /**
@@ -214,15 +378,38 @@ function parsePlaybillListing(html, kind) {
     const address = THEATER_ADDRESSES[theater];
     if (!address) missingAddresses.add(theater);
 
+    // Slug is the stable per-production identifier Playbill itself uses —
+    // e.g. "/production/hadestownwalter-kerr-theatre-2018-2019" →
+    // "hadestownwalter-kerr-theatre-2018-2019". Used as the poster cache
+    // key instead of a title-derived slug: it's guaranteed unique (handles
+    // revivals of the same title) and stable across minor title-text
+    // changes, so cached posters don't get orphaned/re-downloaded for no
+    // reason and the closed-show cleanup step can't misfire on a rename.
+    const slug = extractPlaybillSlug(href);
+    const productionUrl = href.startsWith('http') ? href : `https://playbill.com${href}`;
+
+    // NOTE on poster art: the listing page's thumbnail <img> tags are
+    // lazy-loaded via JS and come back with an EMPTY src in raw HTML
+    // (confirmed by fetching a production page directly and inspecting
+    // the markup — every gallery image rendered as `![alt](<>)`). Cheerio
+    // never executes JS, so that src is unusable here. Poster URLs are
+    // instead fetched per-show from each production page's og:image meta
+    // tag (see fetchPosterUrl() below), which IS server-rendered and
+    // confirmed present in the raw HTML. That happens later, in
+    // cachePosters(), not here — this parser just records the URL to visit.
+
     shows.push({
       title,
       kind,
+      slug,
       theater,
+      productionUrl,
       address: address || `${theater}, New York, NY`,
       opened: 'TBD — not available from this source',
       closes,
       schedule: "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
-      discount: ["Check the show's official site or TodayTix for lottery/rush availability"]
+      discount: ["Check the show's official site or TodayTix for lottery/rush availability"],
+      localPosterPath: null // filled in by cachePosters() after parsing
     });
   });
 
@@ -253,7 +440,12 @@ function mergeWithExisting(scraped, existing) {
         : fresh.schedule,
       discount: fresh.discount[0].startsWith("Check the show's official site")
         ? prior.discount
-        : fresh.discount
+        : fresh.discount,
+      // If this run's poster caching failed (bad og:image, network error,
+      // etc.), fall back to whatever we already had cached rather than
+      // blanking it out — cachePosters() will overwrite this with a fresh
+      // value next run if the fetch succeeds.
+      localPosterPath: fresh.localPosterPath || prior.localPosterPath || null
     };
   });
 }
@@ -280,6 +472,16 @@ async function main() {
 
   const existing = JSON.parse(fs.readFileSync(OUTPUT_PATH, 'utf8'));
   const merged = mergeWithExisting(scraped, existing);
+
+  if (!DRY_RUN) {
+    console.log('Caching poster images…');
+    await cachePosters(merged);
+
+    console.log('Cleaning up posters for closed/delisted shows…');
+    cleanupClosedShowPosters(merged);
+  } else {
+    console.log('--dry-run set, skipping poster download/cleanup.');
+  }
 
   const output = {
     lastUpdated: new Date().toISOString().slice(0, 10),
