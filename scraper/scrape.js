@@ -73,12 +73,50 @@
 const fs = require('fs');
 const path = require('path');
 const cheerio = require('cheerio');
+const { extractSchedule, formatSchedule } = require('./schedule');
 
 const BROADWAY_URL = 'https://playbill.com/shows/broadway';
 const OFFBROADWAY_URL = 'https://playbill.com/shows/offbroadway';
 const OUTPUT_PATH = path.join(__dirname, '..', 'data', 'shows.json');
 const POSTER_DIR = path.join(__dirname, '..', 'posters');
 const DRY_RUN = process.argv.includes('--dry-run');
+
+// Default schedule text before a show's production page has been fetched
+// (or if that fetch/parse fails). Used as a sentinel in two places: (1)
+// mergeWithExisting() checks against it to decide whether to keep a prior
+// hand-curated schedule instead of clobbering it, and (2) cachePoster()
+// checks against it to decide whether a freshly-parsed schedule is safe to
+// write in — i.e. never overwrite something a person already edited by hand.
+const SCHEDULE_PLACEHOLDER = "Standard 8-show week, dark Mon — confirm exact days on the show's own site";
+
+// Shown alongside schedule text on the site. Schedules are refreshed
+// periodically (see SCHEDULE_REFRESH_DAYS) rather than every run, and
+// Playbill's own schedule blocks don't reflect holiday one-offs anyway.
+const SCHEDULE_DISCLAIMER = "Schedule reflects a typical week and may not include holiday performances or one-off changes — confirm before you go.";
+
+// How often a show's schedule gets re-fetched, independent of poster
+// caching. A show's production page may get fetched for its poster (new
+// show) without its schedule being due for a refetch, or vice versa
+// (long-running show, poster already cached, but its schedule.js result is
+// getting stale) — these are two separate concerns now, tracked separately.
+const SCHEDULE_REFRESH_DAYS = 14;
+
+function daysSince(isoDateStr) {
+  if (!isoDateStr) return Infinity;
+  const then = new Date(isoDateStr);
+  if (Number.isNaN(then.getTime())) return Infinity;
+  return (Date.now() - then.getTime()) / (1000 * 60 * 60 * 24);
+}
+
+// A show's schedule is due for a refresh if it's never been successfully
+// scraped, or it's been >= SCHEDULE_REFRESH_DAYS since the last successful
+// scrape — UNLESS scheduleSource is 'manual', meaning a person edited the
+// schedule text directly in shows.json, which this scraper must never
+// overwrite regardless of age.
+function scheduleNeedsRefresh(show) {
+  if (show.scheduleSource === 'manual') return false;
+  return daysSince(show.scheduleUpdatedAt) >= SCHEDULE_REFRESH_DAYS;
+}
 
 // Static theater address lookup. Buildings don't move, so this is a
 // one-time cost, not an ongoing scrape target. Add a line here whenever a
@@ -159,18 +197,41 @@ function extractPlaybillSlug(href) {
 }
 
 /**
- * Fetch a show's own Playbill production page and pull the poster URL from
- * its og:image meta tag. This is server-rendered (confirmed by fetching
+ * Fetch a show's own Playbill production page ONCE and pull two things off
+ * it: the poster URL (og:image meta tag) and the schedule block (the
+ * "<p><strong>SCHEDULE:</strong>..." paragraph, parsed by ./schedule.js).
+ * Combined into one function specifically so schedule extraction rides
+ * along on the same fetch as poster lookup instead of adding a second
+ * request per show — this only runs at all for shows whose poster isn't
+ * already cached (see cachePoster()), which is the same request-minimizing
+ * approach already used for posters.
+ *
+ * og:image is server-rendered (confirmed by fetching
  * playbill.com/production/hadestownwalter-kerr-theatre-2018-2019 directly
  * and inspecting the raw HTML head), unlike the listing page's thumbnail
  * <img> tags, which come back with an empty src because they're populated
- * client-side by JS after load — Cheerio can't see that, so this is the
- * only reliable source for the real poster URL without a headless browser.
+ * client-side by JS after load.
+ *
+ * Schedule extraction is best-effort: not every production page has a
+ * "SCHEDULE:" paragraph in the exact expected shape (closed shows, shows
+ * that haven't announced performance times yet, plays that format it
+ * differently — unconfirmed). extractSchedule() returns null rather than
+ * throwing when it can't find/parse one, so a schedule miss never blocks
+ * the poster lookup that this function is also responsible for.
  */
-async function fetchPosterUrl(productionUrl) {
+async function fetchProductionPageExtras(productionUrl) {
   const html = await fetchHtml(productionUrl);
   const $ = cheerio.load(html);
-  return $('meta[property="og:image"]').attr('content') || null;
+  const posterUrl = $('meta[property="og:image"]').attr('content') || null;
+
+  let schedule = null;
+  try {
+    schedule = extractSchedule(html);
+  } catch (err) {
+    console.warn(`  ! schedule parse failed for ${productionUrl}: ${err.message}`);
+  }
+
+  return { posterUrl, schedule };
 }
 
 /**
@@ -190,54 +251,83 @@ function stripPlaybillImageTransform(url) {
 }
 
 /**
- * Download and cache one show's poster image, keyed by Playbill slug so
- * revivals of the same title (or minor title-text edits between scrapes)
- * can't collide or orphan each other. Skips BOTH the production-page fetch
- * and the image download entirely if a file for this slug already exists —
- * so on a normal day this only does real work for genuinely new shows.
+ * Cache one show's poster image AND refresh its schedule if due — these are
+ * now two independent decisions sharing one page fetch when both (or
+ * either) are needed, so a long-running show with an already-cached poster
+ * still gets its schedule rechecked every SCHEDULE_REFRESH_DAYS, and a
+ * brand-new show gets both on its first pass.
  *
- * Failures here are non-fatal on purpose: a bad/missing poster for one
- * show shouldn't abort the whole scrape the way a zero-shows parse does.
+ * Failures here are non-fatal on purpose: a bad/missing poster or schedule
+ * for one show shouldn't abort the whole scrape the way a zero-shows parse
+ * does.
  */
 async function cachePoster(show) {
   if (!show.slug || !show.productionUrl) return null;
 
-  // Check cache first — this is the step that saves us from fetching every
-  // show's production page on every run. Extension is unknown until we've
-  // actually fetched a posterUrl once, so check for any file starting with
-  // the slug rather than assuming a specific extension.
-  const alreadyCached = fs.existsSync(POSTER_DIR)
+  const cachedFile = fs.existsSync(POSTER_DIR)
     ? fs.readdirSync(POSTER_DIR).find(f => f.startsWith(`${show.slug}.`))
     : null;
-  if (alreadyCached) {
-    return `/posters/${alreadyCached}`;
+  const posterCached = Boolean(cachedFile);
+  const needsSchedule = scheduleNeedsRefresh(show);
+
+  // Nothing to do at all: poster's on disk and the schedule isn't due yet.
+  if (posterCached && !needsSchedule) {
+    return `/posters/${cachedFile}`;
   }
 
   try {
-    const rawPosterUrl = await fetchPosterUrl(show.productionUrl);
+    const { posterUrl: rawPosterUrl, schedule } = await fetchProductionPageExtras(show.productionUrl);
+
+    if (needsSchedule) {
+      if (schedule) {
+        const darkNote = schedule.darkDays.length ? ` — dark ${schedule.darkDays.join(', ')}` : '';
+        show.schedule = formatSchedule(schedule) + darkNote;
+        show.scheduleSource = 'auto';
+        show.scheduleUpdatedAt = new Date().toISOString().slice(0, 10);
+      } else {
+        console.warn(`  ! no schedule block found for "${show.title}" (${show.productionUrl}) — will retry next run`);
+      }
+    }
+
+    // Poster: only act on it if it wasn't already cached. A page fetch
+    // triggered purely by a due schedule refresh must NOT re-download or
+    // replace an already-cached poster image.
+    if (posterCached) {
+      return `/posters/${cachedFile}`;
+    }
+
     if (!rawPosterUrl) {
       console.warn(`  ! no og:image found for "${show.title}" (${show.productionUrl})`);
       return null;
     }
     const posterUrl = stripPlaybillImageTransform(rawPosterUrl);
-
     const ext = path.extname(new URL(posterUrl).pathname) || '.jpg';
     const filename = `${show.slug}${ext}`;
-    const destPath = path.join(POSTER_DIR, filename);
 
+    // The page fetch above always runs, dry-run or not — only the actual
+    // image download/write is skipped here, since that's the part that
+    // touches disk. Returned path is what it WOULD be, so --dry-run output
+    // still shows a realistic localPosterPath.
+    if (DRY_RUN) {
+      return `/posters/${filename}`;
+    }
+
+    const destPath = path.join(POSTER_DIR, filename);
     const res = await fetch(posterUrl);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const buffer = Buffer.from(await res.arrayBuffer());
     fs.writeFileSync(destPath, buffer);
     return `/posters/${filename}`;
   } catch (err) {
-    console.warn(`  ! poster caching failed for "${show.title}": ${err.message}`);
-    return null;
+    console.warn(`  ! page fetch failed for "${show.title}": ${err.message}`);
+    // Poster was already on disk even though this run's attempt (poster
+    // and/or schedule) failed — keep it rather than blanking it out.
+    return posterCached ? `/posters/${cachedFile}` : null;
   }
 }
 
 async function cachePosters(shows) {
-  if (!fs.existsSync(POSTER_DIR)) fs.mkdirSync(POSTER_DIR, { recursive: true });
+  if (!DRY_RUN && !fs.existsSync(POSTER_DIR)) fs.mkdirSync(POSTER_DIR, { recursive: true });
 
   let cached = 0;
   let fetched = 0;
@@ -407,7 +497,9 @@ function parsePlaybillListing(html, kind) {
       address: address || `${theater}, New York, NY`,
       opened: 'TBD — not available from this source',
       closes,
-      schedule: "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
+      schedule: SCHEDULE_PLACEHOLDER,
+      scheduleSource: null,       // 'auto' once the scraper successfully sets it, 'manual' if hand-edited
+      scheduleUpdatedAt: null,    // ISO date of last successful auto-scrape; null = never fetched, always due
       discount: ["Check the show's official site or TodayTix for lottery/rush availability"],
       localPosterPath: null // filled in by cachePosters() after parsing
     });
@@ -435,9 +527,9 @@ function mergeWithExisting(scraped, existing) {
     return {
       ...fresh,
       opened: fresh.opened.startsWith('TBD') && prior.opened ? prior.opened : fresh.opened,
-      schedule: fresh.schedule.startsWith('Standard 8-show week, dark Mon — confirm')
-        ? prior.schedule
-        : fresh.schedule,
+      schedule: prior.schedule || fresh.schedule,
+      scheduleSource: prior.scheduleSource || fresh.scheduleSource || null,
+      scheduleUpdatedAt: prior.scheduleUpdatedAt || fresh.scheduleUpdatedAt || null,
       discount: fresh.discount[0].startsWith("Check the show's official site")
         ? prior.discount
         : fresh.discount,
@@ -473,19 +565,22 @@ async function main() {
   const existing = JSON.parse(fs.readFileSync(OUTPUT_PATH, 'utf8'));
   const merged = mergeWithExisting(scraped, existing);
 
-  if (!DRY_RUN) {
-    console.log('Caching poster images…');
-    await cachePosters(merged);
+  console.log(DRY_RUN
+    ? 'Fetching poster + schedule info (dry run — not writing image files)…'
+    : 'Caching poster images…');
+  await cachePosters(merged);
 
+  if (!DRY_RUN) {
     console.log('Cleaning up posters for closed/delisted shows…');
     cleanupClosedShowPosters(merged);
   } else {
-    console.log('--dry-run set, skipping poster download/cleanup.');
+    console.log('--dry-run set, skipping poster cleanup (disk-only step).');
   }
 
   const output = {
     lastUpdated: new Date().toISOString().slice(0, 10),
     source: 'auto-generated by scraper/scrape.js (Playbill /shows/broadway + /shows/offbroadway)',
+    scheduleDisclaimer: SCHEDULE_DISCLAIMER,
     shows: merged
   };
 
