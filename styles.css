@@ -294,7 +294,7 @@ footer a{color:var(--tape-deep);}
   .show-card{
     display:grid;
     grid-template-columns:76px 1fr;
-    gap:10px 14px;
+    gap:10px 24px;
     padding:20px 6px;
   }
   .show-card > *:nth-child(n+3){
@@ -306,13 +306,19 @@ footer a{color:var(--tape-deep);}
     display:none;
   }
 
-  /* no poster: collapse the empty column so the title isn't
-     floating next to blank space */
   .show-card:not(:has(.poster-cell img)){
     grid-template-columns: 1fr;
   }
   .show-card:not(:has(.poster-cell img)) .poster-cell{
     display:none;
+  }
+
+  /* keep the poster image inside its grid column instead of
+     overflowing at its hardcoded 92px width */
+  .show-poster{
+    width:100%;
+    height:auto;
+    display:block;
   }
 
   .show-card::before{left:-12px;}
