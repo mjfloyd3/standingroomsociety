@@ -287,23 +287,35 @@ footer{
 footer a{color:var(--tape-deep);}
 
 /* ---------- Responsive ---------- */
+
+
 @media (max-width: 880px){
   .header-row{display:none;}
   .show-card{
-    grid-template-columns:1fr;
-    gap:12px;
+    display:grid;
+    grid-template-columns:76px 1fr;
+    gap:10px 14px;
     padding:20px 6px;
   }
+  .show-card > *:nth-child(n+3){
+    grid-column: 1 / -1;
+  }
+
   .col-label{display:block;}
+  .show-card > *:nth-child(2) > .col-label{
+    display:none;
+  }
+
+  /* no poster: collapse the empty column so the title isn't
+     floating next to blank space */
+  .show-card:not(:has(.poster-cell img)){
+    grid-template-columns: 1fr;
+  }
+  .show-card:not(:has(.poster-cell img)) .poster-cell{
+    display:none;
+  }
+
   .show-card::before{left:-12px;}
-}
-@media (max-width: 560px){
-  header{padding: 20px 5px 5px;}
-  h1 span{margin-left:-0.6em;}
-  .tagline{letter-spacing:0.3em;padding-left:0.3em;}
-  .tab{margin-right:16px;letter-spacing:0.1em;}
-  .stage{padding:0 18px;}
-  .show-card::before{left:-10px;}
 }
 
 @media (prefers-reduced-motion: reduce){
