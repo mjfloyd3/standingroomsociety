@@ -325,6 +325,74 @@ footer a{color:var(--tape-deep);}
   .show-card::before{left:-12px;}
 }
 
+.tft-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  /* break out of any centered/max-width parent and span the full viewport */
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  box-sizing: border-box;
+  padding: 0.6rem 1.25rem;
+  background: #cd534d;
+  color: #faf6ee; /* paper-ground, inverted for contrast on the red */
+  text-decoration: none;
+  font-family: inherit;
+  line-height: 1.35;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.tft-banner:hover,
+.tft-banner:focus-visible {
+  background: #b5433e;
+}
+
+.tft-banner__icon {
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  color: #faf6ee;
+}
+
+.tft-banner__copy {
+  flex: 1 1 260px;
+  font-size: 0.85rem;
+}
+
+.tft-banner__copy strong {
+  font-weight: 700;
+}
+
+.tft-banner__cta {
+  flex: 0 0 auto;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+
+/* Mobile: stack and shrink so it never crowds the nav below it */
+@media (max-width: 640px) {
+  .tft-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding: 0.6rem 0.85rem;
+  }
+
+  .tft-banner__copy {
+    font-size: 0.8rem;
+  }
+
+  .tft-banner__cta {
+    font-size: 0.8rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{transition:none !important;}
 }

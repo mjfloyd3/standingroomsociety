@@ -85,8 +85,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "Digital lottery: $49 via https://www.luckyseat.com/shows/thebookofmormon-newyork — weekday entries close 9:30 AM ET day before",
-        "Digital rush: $53 via TodayTix app, released 9 AM day of performance"
+        "Digital lottery: $49 via https://www.luckyseat.com/shows/thebookofmormon-newyork"
       ],
       "localPosterPath": "/posters/the-book-of-mormon-eugene-oneill-theatre-vault-0000013715.jpg"
     },
@@ -139,7 +138,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$39 digital lottery via https://rush.telecharge.com."
       ],
       "localPosterPath": "/posters/operation-mincemeat-broadway-john-golden-theatre-2025.jpg"
     },
@@ -173,7 +172,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$45 digital lottery via https://lottery.broadwaydirect.com/show/lost-boys/"
       ],
       "localPosterPath": "/posters/the-lost-boys-broadway-palace-theatre-2026.jpg"
     },
@@ -207,7 +206,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$48 digital lottery via https://rush.telecharge.com"
       ],
       "localPosterPath": "/posters/two-strangers-carry-a-cake-across-new-york-broadway-longacre-theatre-2025.jpg"
     },
@@ -260,7 +259,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$30 digital lotteyr via TodayTix"
       ],
       "localPosterPath": "/posters/the-rocky-horror-show-broadway-studio-54-2026.jpg"
     },
@@ -277,7 +276,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$45 digital lottery via https://lottery.broadwaydirect.com/show/schmigadoon-ny/"
       ],
       "localPosterPath": "/posters/schmigadoon-broadway-nederlander-theatre-2026.jpg"
     },
@@ -312,7 +311,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "$49 digital rush via the TodayTix app (todaytix.com)",
+        "$49 digital rush via TodayTix app",
         "$49 general rush at the box office; $45 standing room when sold out"
       ],
       "localPosterPath": "/posters/juliet-broadway-stephen-sondheim-theatre-2022.jpg"
@@ -330,7 +329,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "$49 digital lottery at rush.telecharge.com",
+        "$49 digital lottery at https://rush.telecharge.com",
         "$45 general rush, $30 under-30 tickets, and $39 standing room at the box office"
       ],
       "localPosterPath": "/posters/the-outsiders-broadway-bernard-b-jacobs-theatre-2024.jpg"
@@ -348,8 +347,8 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "$20.64 digital lottery at rush.telecharge.com",
-        "$49 general rush at the box office; $49 digital rush at rush.telecharge.com; $49 standing room when sold out"
+        "$20.64 digital lottery and $49 digital rush at rush.telecharge.com",
+        "$49 general rush at the box office; $49 standing room when sold out"
       ],
       "localPosterPath": "/posters/maybe-happy-ending-broadway-belasco-theatre-2024.jpg"
     },
@@ -366,7 +365,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "No rush or lottery currently listed in Playbill's policy guide — check todaytix.com for offers"
+        "$45 digital lottery via https://lottery.broadwaydirect.com/show/st-nyc/"
       ],
       "localPosterPath": "/posters/stranger-things-the-first-shadow-broadway-marquis-theatre-2025.jpg"
     },
@@ -401,7 +400,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "$49 digital lottery at lottery.broadwaydirect.com/show/mj-ny"
+        "$49 digital lottery at https://lottery.broadwaydirect.com/show/mj-ny"
       ],
       "localPosterPath": "/posters/mj-the-musicalneil-simon-theatre-2021-2022.jpg"
     },
@@ -418,7 +417,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-10",
       "discount": [
-        "$10 digital lottery at hamiltonmusical.com or the Hamilton app — front-row orchestra seats"
+        "$10 digital lottery at hamiltonmusical.com or the Hamilton app (front-row orchestra seats)"
       ],
       "localPosterPath": "/posters/hamilton-broadway-richard-rodgers-theatre-2015.jpg"
     },
@@ -431,7 +430,7 @@
       "address": "219 W 49th St, New York, NY 10019",
       "opened": "Nov 14, 1996",
       "closes": null,
-      "schedule": "Includes Mon performances — one of the only Broadway shows that plays Mondays",
+      "schedule": "Includes Mon performances (one of the only Broadway shows that plays Mondays)",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
@@ -453,7 +452,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-14",
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$40 digital lottery via LuckySeat"
       ],
       "localPosterPath": "/posters/paranormal-activity-broadway-august-wilson-theatre-2026.jpg"
     },
@@ -487,7 +486,7 @@
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "Check the show's official site for lottery/rush availability"
       ],
       "localPosterPath": "/posters/birthright-off-broadway-the-robert-w-wilson-mcc-theater-space-2026.jpg"
     },
