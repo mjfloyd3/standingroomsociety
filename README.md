@@ -14,5 +14,4 @@ scraper/scrape.js        → scrapes IBDB (Broadway) + Playbill (Off-Broadway)
 ```
 
 No database, no server. GitHub Actions runs the scraper on a cron schedule,
-commits the updated `data/shows.json` straight to the repo, and your host
-(Vercel/Netlify) redeploys automatically on that push.
+commits the updated `data/shows.json` straight to the repo, redeployed by Vercel automatically.
