@@ -10,7 +10,7 @@
       "theater": "Lena Horne Theatre",
       "productionUrl": "https://playbill.com/production/six-the-musicallena-horne-theatre-2021-2022",
       "address": "256 W 47th St, New York, NY 10036",
-      "opened": "October 3, 2021",
+      "opened": "Oct 3, 2021",
       "closes": "Jan 3, 2027",
       "schedule": "Sun 2pm & 7pm · Mon 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 3pm & 8pm — dark Tue",
       "scheduleSource": "auto",
@@ -47,7 +47,7 @@
       "theater": "Longacre Theatre",
       "productionUrl": "https://playbill.com/production/two-strangers-carry-a-cake-across-new-york-broadway-longacre-theatre-2025",
       "address": "220 W 48th St, New York, NY 10036",
-      "opened": "November 20, 2025",
+      "opened": "Nov 20, 2025",
       "closes": null,
       "schedule": "Sun 3pm · Tue 7:30pm · Wed 2pm & 7:30pm · Thu 7:30pm · Fri 7:30pm · Sat 2pm & 7:30pm — dark Mon",
       "scheduleSource": "auto",
@@ -341,7 +341,7 @@
       "theater": "Nederlander Theatre",
       "productionUrl": "https://playbill.com/production/schmigadoon-broadway-nederlander-theatre-2026",
       "address": "208 W 41st St, New York, NY 10036",
-      "opened": "TBD — not available from this source",
+      "opened": "Apr 20, 2026",
       "closes": null,
       "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm — dark Mon",
       "scheduleSource": "auto",
@@ -429,8 +429,8 @@
       "theater": "August Wilson Theatre",
       "productionUrl": "https://playbill.com/production/paranormal-activity-broadway-august-wilson-theatre-2026",
       "address": "245 W 52nd St, New York, NY 10019",
-      "opened": "TBD — not available from this source",
-      "closes": null,
+      "opened": "Aug 25, 2026",
+      "closes": "Jan 3, 2027",
       "schedule": "Sun 2pm & 7:30pm · Tue 8pm · Wed 8pm · Thu 8pm · Fri 8pm · Sat 2pm & 8pm — dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-28",
@@ -446,7 +446,7 @@
       "theater": "New World Stages Stage 3",
       "productionUrl": "https://playbill.com/production/the-25th-annual-putnam-county-spelling-bee-off-broadway-new-world-stages-stage-3-2025",
       "address": "340 W 50th St, New York, NY 10019",
-      "opened": "2026 revival",
+      "opened": "Nov 17, 2025",
       "closes": "Oct 11, 2026",
       "schedule": "Limited engagement — check newworldstages.com for current weekly schedule",
       "scheduleSource": null,
@@ -463,13 +463,13 @@
       "theater": "Lucille Lortel Theatre",
       "productionUrl": "https://playbill.com/production/222-a-ghost-story-off-broadway-lucille-lortel-theatre-2026",
       "address": "Lucille Lortel Theatre, New York, NY",
-      "opened": "TBD — not available from this source",
-      "closes": null,
+      "opened": "Nov 5, 2026",
+      "closes": "Jan 17, 2027",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "TodayTix digital rush"
       ],
       "localPosterPath": null
     },
@@ -480,8 +480,8 @@
       "theater": "Theatre for a New Audience @ Polonsky Shakespeare Center",
       "productionUrl": "https://playbill.com/production/america-who-hurt-you-off-broadway-theatre-for-a-new-audience-polonsky-shakespeare-center-2026",
       "address": "Theatre for a New Audience @ Polonsky Shakespeare Center, New York, NY",
-      "opened": "TBD — not available from this source",
-      "closes": null,
+      "opened": "Sept 17, 2026",
+      "closes": "Sept 27, 2026",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
@@ -497,13 +497,13 @@
       "theater": "The Robert W. Wilson MCC Theater Space",
       "productionUrl": "https://playbill.com/production/anon-a-tempest-at-our-kitchen-table-off-broadway-the-robert-w-wilson-mcc-theater-space-2026",
       "address": "The Robert W. Wilson MCC Theater Space, New York, NY",
-      "opened": "TBD — not available from this source",
-      "closes": null,
+      "opened": "Oct 14, 2026",
+      "closes": "Nov 1, 2026",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$35 digital rush tickets via TodayTix"
       ],
       "localPosterPath": "/posters/anon-a-tempest-at-our-kitchen-table-off-broadway-the-robert-w-wilson-mcc-theater-space-2026.jpg"
     },
@@ -565,7 +565,7 @@
       "theater": "Public Theater/Newman Theater",
       "productionUrl": "https://playbill.com/production/the-curious-case-of-benjamin-button-off-broadway-public-theater-newman-theater-2026",
       "address": "Public Theater/Newman Theater, New York, NY",
-      "opened": "TBD — not available from this source",
+      "opened": "Oct 8, 2026",
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
@@ -599,13 +599,13 @@
       "theater": "The Pershing Square Signature Center/Romulus Linney Courtyard Theatre",
       "productionUrl": "https://playbill.com/production/disruption-off-broadway-the-pershing-square-signature-center-romulus-linney-courtyard-theatre-2026",
       "address": "The Pershing Square Signature Center/Romulus Linney Courtyard Theatre, New York, NY",
-      "opened": "TBD — not available from this source",
+      "opened": "Aug 2, 2026",
       "closes": "Oct 4, 2026",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "Same-day $48 Rush"
       ],
       "localPosterPath": null
     },
@@ -667,7 +667,7 @@
       "theater": "The Theater Center/ The Jerry Orbach Theater",
       "productionUrl": "https://playbill.com/production/friends-the-musical-parody-off-broadway-the-theater-center-the-jerry-orbach-theater-2021",
       "address": "The Theater Center/ The Jerry Orbach Theater, New York, NY",
-      "opened": "TBD — not available from this source",
+      "opened": "Mar 29, 2022",
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
@@ -769,13 +769,13 @@
       "theater": "The Culture Club",
       "productionUrl": "https://playbill.com/production/heated-rivalry-the-unauthorized-musical-parody-off-broadway-the-culture-club-2026",
       "address": "The Culture Club, New York, NY",
-      "opened": "TBD — not available from this source",
-      "closes": null,
-      "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
+      "opened": "May 26, 2026",
+      "closes": "Nov 1, 2026",
+      "schedule": "Standard 8-show week, 2pm matinee Sat & Sun, closed Mon",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$49 Digital Rush via TodayTix"
       ],
       "localPosterPath": null
     },
@@ -786,13 +786,13 @@
       "theater": "New World Stages Stage 1",
       "productionUrl": "https://playbill.com/production/heathers-the-musical-off-broadway-new-world-stages-stage-1-2025",
       "address": "340 W 50th St, New York, NY 10019",
-      "opened": "TBD — not available from this source",
+      "opened": "Jul 10, 2025",
       "closes": "Nov 8, 2026",
-      "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
+      "schedule": "Standard 8-show week, dark Mon",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$38 lottery via rush.telecharge.com"
       ],
       "localPosterPath": null
     },
@@ -805,7 +805,7 @@
       "address": "The Wild Project, New York, NY",
       "opened": "TBD — not available from this source",
       "closes": null,
-      "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
+      "schedule": "Standard 8-show week, dark Mon",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
@@ -922,13 +922,13 @@
       "theater": "New York City Center",
       "productionUrl": "https://playbill.com/production/in-the-heights-off-broadway-new-york-city-center-2026",
       "address": "New York City Center, New York, NY",
-      "opened": "TBD — not available from this source",
-      "closes": null,
-      "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
+      "opened": "Oct 28, 2026",
+      "closes": "Nov 15, 2026",
+      "schedule": "showtimes vary, check https://www.nycitycenter.org/events/2026-2027-in-the-heights",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$28 HEIGHTS RUSH TICKETS"
       ],
       "localPosterPath": null
     },
@@ -956,8 +956,8 @@
       "theater": "Theaterlab",
       "productionUrl": "https://playbill.com/production/the-invention-of-love-off-broadway-theaterlab-2026",
       "address": "Theaterlab, New York, NY",
-      "opened": "TBD — not available from this source",
-      "closes": null,
+      "opened": "Sept 20, 2026",
+      "closes": "Oct 3, 2026",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
@@ -1041,13 +1041,13 @@
       "theater": "Westside Theatre (Upstairs)",
       "productionUrl": "https://playbill.com/production/little-shop-of-horrorswestside-theatre-upstairs-2019-2020",
       "address": "Westside Theatre (Upstairs), New York, NY",
-      "opened": "TBD — not available from this source",
+      "opened": "Sept 17, 2019",
       "closes": null,
-      "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
+      "schedule": "Standard 8-show week, dark Mon",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$45 digital lottery via https://littleshopofhorrors.socialtoaster.com/"
       ],
       "localPosterPath": "/posters/little-shop-of-horrorswestside-theatre-upstairs-2019-2020.jpg"
     },
@@ -1058,13 +1058,13 @@
       "theater": "Masquerade",
       "productionUrl": "https://playbill.com/production/masquerade-off-broadway-masquerade-2025",
       "address": "Masquerade, New York, NY",
-      "opened": "TBD — not available from this source",
+      "opened": "Sept 28, 2025",
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "Lotto 666, in-person ticket lottery"
       ],
       "localPosterPath": "/posters/masquerade-off-broadway-masquerade-2025.jpg"
     },
@@ -1177,13 +1177,13 @@
       "theater": "New World Stages Stage 4",
       "productionUrl": "https://playbill.com/production/the-play-that-goes-wrong-off-broadway-new-world-stages-stage-4-2019",
       "address": "340 W 50th St, New York, NY 10019",
-      "opened": "Long-running",
+      "opened": "Feb 20, 2019",
       "closes": null,
-      "schedule": "Standard weekly schedule — check newworldstages.com for current times",
+      "schedule": "check newworldstages.com for current times",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Digital rush sometimes offered via TodayTix — check the app day-of"
+        "$35 digital lottery via https://www.broadwaygoeswrong.com/lottery/"
       ],
       "localPosterPath": "/posters/the-play-that-goes-wrong-off-broadway-new-world-stages-stage-4-2019.jpg"
     },
@@ -1194,13 +1194,13 @@
       "theater": "Greenwich House Theater",
       "productionUrl": "https://playbill.com/production/pre-existing-condition-off-broadway-greenwich-house-theater-2026",
       "address": "Greenwich House Theater, New York, NY",
-      "opened": "TBD — not available from this source",
-      "closes": null,
+      "opened": "Sept 14, 2026",
+      "closes": "Dec 19, 2026",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$49 Digital Rush via TodayTix"
       ],
       "localPosterPath": null
     },
@@ -1262,7 +1262,7 @@
       "theater": "Cherry Lane Theatre",
       "productionUrl": "https://playbill.com/production/shifters-off-broadway-cherry-lane-theatre-2026",
       "address": "Cherry Lane Theatre, New York, NY",
-      "opened": "TBD — not available from this source",
+      "opened": "Jul 15, 2026",
       "closes": "Sep 20, 2026",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
