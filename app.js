@@ -119,6 +119,15 @@ function isClosingSoon(closesStr){
   return daysUntil >= 0 && daysUntil <= 21;
 }
 
+// A show counts as "coming soon" if its opening date is in the future.
+// Unparseable/vague opening strings ("2026", "Long-running", "1987")
+// correctly fall through to false via parseShowDate returning null.
+function isComingSoon(openedStr){
+  const openDate = parseShowDate(openedStr);
+  if (!openDate) return false;
+  return openDate > new Date();
+}
+
 function render(){
   let filtered = shows.filter(s => activeFilter === 'all' || s.kind === activeFilter);
   filtered = filtered.slice().sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
@@ -162,7 +171,7 @@ function render(){
         </div>
         <div>
           <div class="col-label">Run</div>
-          <div class="dates-row"><span class="lbl">Opened</span>${esc(s.opened)}</div>
+          <div class="dates-row"><span class="lbl">Opened</span>${esc(s.opened)}${isComingSoon(s.opened) ? '<span class="coming-soon-badge">Coming Soon</span>' : ''}</div>
           <div class="dates-row"><span class="lbl">Closes</span>${s.closes ? esc(s.closes) : '<span class="open-ended">Open run</span>'}${s.closes && isClosingSoon(s.closes) ? '<span class="closing-soon-badge">Closing Soon</span>' : ''}</div>
         </div>
         <div>

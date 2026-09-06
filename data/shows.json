@@ -31,7 +31,7 @@
       "address": "213 W 42nd St, New York, NY 10036",
       "opened": "Apr 22, 2018",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm — dark Mon",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -49,7 +49,7 @@
       "address": "220 W 48th St, New York, NY 10036",
       "opened": "Nov 20, 2025",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7:30pm · Wed 2pm & 7:30pm · Thu 7:30pm · Fri 7:30pm · Sat 2pm & 7:30pm — dark Mon",
+      "schedule": "Sun 3pm · Tue 7:30pm · Wed 2pm & 7:30pm · Thu 7:30pm · Fri 7:30pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -66,7 +66,7 @@
       "address": "160 W 47th St, New York, NY 10036",
       "opened": "Apr 26, 2026",
       "closes": null,
-      "schedule": "Sun 2pm & 7:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm — dark Mon",
+      "schedule": "Sun 2pm & 7:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -81,9 +81,9 @@
       "theater": "Eugene O'Neill Theatre",
       "productionUrl": "https://playbill.com/production/the-book-of-mormon-eugene-oneill-theatre-vault-0000013715",
       "address": "230 W 49th St, New York, NY 10019",
-      "opened": "March 24, 2011",
+      "opened": "Mar 24, 2011",
       "closes": null,
-      "schedule": "Sun 2pm & 7pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7pm — dark Mon",
+      "schedule": "Sun 2pm & 7pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -98,9 +98,9 @@
       "theater": "John Golden Theatre",
       "productionUrl": "https://playbill.com/production/operation-mincemeat-broadway-john-golden-theatre-2025",
       "address": "252 W 45th St, New York, NY 10036",
-      "opened": "March 20, 2025",
+      "opened": "Mar 20, 2025",
       "closes": null,
-      "schedule": "Sun 2pm & 7:30pm · Tue 7pm · Wed 2pm · Thu 7pm · Fri 7:30pm · Sat 2pm & 7:30pm — dark Mon",
+      "schedule": "Sun 2pm & 7:30pm · Tue 7pm · Wed 2pm · Thu 7pm · Fri 7:30pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -115,9 +115,9 @@
       "theater": "New Amsterdam Theatre",
       "productionUrl": "https://playbill.com/production/aladdin-new-amsterdam-theatre-vault-0000014037",
       "address": "214 W 42nd St, New York, NY 10036",
-      "opened": "March 20, 2014",
+      "opened": "Mar 20, 2014",
       "closes": null,
-      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm — dark Mon",
+      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -132,7 +132,7 @@
       "theater": "Gershwin Theatre",
       "productionUrl": "https://playbill.com/production/wicked-broadway-gershwin-theatre-2003",
       "address": "222 W 51st St, New York, NY 10019",
-      "opened": "October 30, 2003",
+      "opened": "Oct 30, 2003",
       "closes": null,
       "schedule": "Mon 7pm · Tue 7pm · Wed 2pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm — dark Sun",
       "scheduleSource": "auto",
@@ -152,7 +152,7 @@
       "address": "219 W 48th St, New York, NY 10036",
       "opened": "Apr 17, 2019",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm — dark Mon",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -170,7 +170,7 @@
       "address": "235 W 50th St, New York, NY 10019",
       "opened": "Apr 26, 2025",
       "closes": null,
-      "schedule": "Sun 2pm · Tue 7pm · Wed 2pm & 8pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm — dark Mon",
+      "schedule": "Sun 2pm · Tue 7pm · Wed 2pm & 8pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -202,7 +202,7 @@
       "theater": "Lyceum Theatre",
       "productionUrl": "https://playbill.com/production/oh-mary-broadway-lyceum-theatre-2024",
       "address": "149 W 45th St, New York, NY 10036",
-      "opened": "July 11, 2024",
+      "opened": "Jul 11, 2024",
       "closes": null,
       "schedule": "Mon 7:30pm · Tue 7:30pm · Wed 7:30pm · Thu 3pm & 7:30pm · Fri 7:30pm · Sat 5pm & 8:30pm — dark Sun",
       "scheduleSource": "auto",
@@ -221,7 +221,7 @@
       "address": "254 W 54th St, New York, NY 10019",
       "opened": "Apr 23, 2026",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 7pm · Thu 3pm & 8pm · Fri 7pm · Sat 3pm & 8pm — dark Mon",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 7pm · Thu 3pm & 8pm · Fri 7pm · Sat 3pm & 8pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -236,9 +236,9 @@
       "theater": "Minskoff Theatre",
       "productionUrl": "https://playbill.com/production/the-lion-king-new-amsterdam-theatre-vault-0000008729",
       "address": "200 W 45th St, New York, NY 10036",
-      "opened": "July 8, 1997",
+      "opened": "Jul 8, 1997",
       "closes": null,
-      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm — dark Mon",
+      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -255,7 +255,7 @@
       "address": "124 W 43rd St, New York, NY 10036",
       "opened": "Nov 17, 2022",
       "closes": null,
-      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 2pm · Thu 7pm · Fri 8pm · Sat 2pm & 8pm — dark Mon",
+      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 2pm · Thu 7pm · Fri 8pm · Sat 2pm & 8pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -273,7 +273,7 @@
       "address": "246 W 44th St, New York, NY 10036",
       "opened": "Apr 12, 2026",
       "closes": "Sep 20, 2026",
-      "schedule": "Mon 7:30pm · Tue 7:30pm · Wed 7:30pm · Thu 3pm & 7:30pm · Fri 7pm · Sat 3pm & 8pm — dark Sun",
+      "schedule": "Mon 7:30pm · Tue 7:30pm · Wed 7:30pm · Thu 3pm & 7:30pm · Fri 7pm · Sat 3pm & 8pm · [[dark Sun]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -291,7 +291,7 @@
       "address": "226 W 46th St, New York, NY 10036",
       "opened": "Aug 6, 2015",
       "closes": null,
-      "schedule": "Sun 1pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 1pm & 7pm — dark Mon",
+      "schedule": "Sun 1pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 1pm & 7pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -308,7 +308,7 @@
       "address": "236 W 45th St, New York, NY 10036",
       "opened": "Mar 19, 2025",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm — dark Mon",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -326,7 +326,7 @@
       "address": "1535 Broadway (between 45th and 46th Streets), New York, NY 10036",
       "opened": "Apr 22, 2025",
       "closes": "Jan 3, 2027",
-      "schedule": "Sun 1pm & 7pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 1pm & 7pm — dark Mon",
+      "schedule": "Sun 1pm & 7pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 1pm & 7pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -343,7 +343,7 @@
       "address": "208 W 41st St, New York, NY 10036",
       "opened": "Apr 20, 2026",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm — dark Mon",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -360,7 +360,7 @@
       "address": "250 W 52nd St, New York, NY 10019",
       "opened": "Feb 1, 2022",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm — dark Mon",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -395,7 +395,7 @@
       "address": "111 W 44th St, New York, NY 10036",
       "opened": "Nov 12, 2024",
       "closes": null,
-      "schedule": "Sun 2pm · Tue 7pm · Wed 2pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7pm — dark Mon",
+      "schedule": "Sun 2pm · Tue 7pm · Wed 2pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -413,7 +413,7 @@
       "address": "242 W 45th St, New York, NY 10036",
       "opened": "Apr 11, 2024",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm — dark Mon",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -431,7 +431,7 @@
       "address": "245 W 52nd St, New York, NY 10019",
       "opened": "Aug 25, 2026",
       "closes": "Jan 3, 2027",
-      "schedule": "Sun 2pm & 7:30pm · Tue 8pm · Wed 8pm · Thu 8pm · Fri 8pm · Sat 2pm & 8pm — dark Mon",
+      "schedule": "Sun 2pm & 7:30pm · Tue 8pm · Wed 8pm · Thu 8pm · Fri 8pm · Sat 2pm & 8pm ·[[dark Mon]]",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-28",
       "discount": [
@@ -1279,13 +1279,13 @@
       "theater": "The Theater Center/ The Jerry Orbach Theater",
       "productionUrl": "https://playbill.com/production/singfeld-a-musical-about-nothing-off-broadway-the-theater-center-the-jerry-orbach-theater-2024",
       "address": "The Theater Center/ The Jerry Orbach Theater, New York, NY",
-      "opened": "TBD — not available from this source",
+      "opened": "Jun 14, 2023",
       "closes": null,
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$27 digital lottery via Lucky Seat"
       ],
       "localPosterPath": null
     },
@@ -1296,13 +1296,13 @@
       "theater": "Orpheum Theatre",
       "productionUrl": "https://playbill.com/production/slam-frank-off-broadway-orpheum-theatre-2026",
       "address": "Orpheum Theatre, New York, NY",
-      "opened": "TBD — not available from this source",
-      "closes": null,
+      "opened": "Sept 17, 2026",
+      "closes": "Oct 4, 2026",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$20 in-person rush tickets"
       ],
       "localPosterPath": "/posters/slam-frank-off-broadway-orpheum-theatre-2026.jpg"
     },
@@ -1313,13 +1313,13 @@
       "theater": "St. Luke's Theatre",
       "productionUrl": "https://playbill.com/production/soon-off-broadway-st-lukes-theatre-2026",
       "address": "St. Luke's Theatre, New York, NY",
-      "opened": "TBD — not available from this source",
-      "closes": null,
+      "opened": "Sept 30, 2026",
+      "closes": "Nov 8, 2026",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "visit https://www.tdf.org/shows/22863/soon/"
       ],
       "localPosterPath": null
     },
