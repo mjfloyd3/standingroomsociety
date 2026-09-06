@@ -5,7 +5,7 @@
    stylesheet is preserved; markup and JS are untouched.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Oswald:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Oswald:wght@400;500;600&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 :root{
   --paper:#e4e6e6;          /* cool gray paper, from the logo comps */
@@ -20,8 +20,9 @@
 
   /* Roles kept from the old token names so nothing dangles:   */
   --deco:'Oswald','Arial Narrow',sans-serif;        /* labels/tape */
-  --serif:'PT Sans','Source Sans 3','Helvetica Neue', Arial,sans-serif; /* body */
-  --display:'Gentium Plus','PT Sans','Source Sans 3', Arial, serif;  /* titles */
+  --deco1:'Open Sans','Helvetica', Arial, sans-serif;
+  --serif:'Source Sans 3','Helvetica Neue', Arial,sans-serif; /* body */
+  --display:'Gentium Plus', 'Source Sans 3', Arial, serif;  /* titles */
 
   /* torn tape ends, shared by every snipe */
   --tape-tear:polygon(1.2% 0%, 98.4% 4%, 100% 18%, 98.8% 46%, 100% 74%, 98.2% 100%, 2% 96%, 0% 82%, 1.6% 52%, 0% 22%);
@@ -45,6 +46,7 @@ header{
   padding:22px 24px 10px;
   text-align:center;
   p {
+    font-family:var(--deco1);
     margin-top: 0;
   }
 }
@@ -233,11 +235,11 @@ h1 span{
   grid-template-columns:92px 1.5fr 1.4fr 1fr 1.3fr 1.6fr;
   gap:20px;
   padding:0 6px 12px;
-  font-family:var(--deco);
+  font-family:var(--deco1);
   font-weight:500;
   text-transform:uppercase;
   font-size:0.64rem;
-  letter-spacing:0.14em;
+  letter-spacing:0.12em;
   color:var(--ink-soft);
   border-bottom:2px solid var(--hairline-strong);
   margin-bottom:4px;
