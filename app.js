@@ -128,6 +128,18 @@ function isComingSoon(openedStr){
   return openDate > new Date();
 }
 
+// A show counts as "limited engagement" if it has a known closing date
+// and the total run (opened → closes) is under 21 days. Open-ended runs
+// (closes === null) and unparseable dates never qualify.
+function isLimitedEngagement(openedStr, closesStr){
+  const openDate = parseShowDate(openedStr);
+  const closeDate = parseShowDate(closesStr);
+  if (!openDate || !closeDate) return false;
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const runLength = (closeDate - openDate) / msPerDay;
+  return runLength >= 0 && runLength <= 21;
+}
+
 function render(){
   let filtered = shows.filter(s => activeFilter === 'all' || s.kind === activeFilter);
   filtered = filtered.slice().sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
@@ -171,6 +183,7 @@ function render(){
         </div>
         <div>
           <div class="col-label">Run</div>
+          ${isLimitedEngagement(s.opened, s.closes) ? '<div class="limited-engagement-row"><span class="limited-engagement-badge">Limited Engagement</span></div>' : ''}
           <div class="dates-row"><span class="lbl">Opened</span>${esc(s.opened)}${isComingSoon(s.opened) ? '<span class="coming-soon-badge">Coming Soon</span>' : ''}</div>
           <div class="dates-row"><span class="lbl">Closes</span>${s.closes ? esc(s.closes) : '<span class="open-ended">Open run</span>'}${s.closes && isClosingSoon(s.closes) ? '<span class="closing-soon-badge">Closing Soon</span>' : ''}</div>
         </div>
