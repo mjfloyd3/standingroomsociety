@@ -21,7 +21,7 @@
   /* Roles kept from the old token names so nothing dangles:   */
   --deco:'Oswald','Arial Narrow',sans-serif;        /* labels/tape */
   --deco1:'Open Sans','Helvetica', Arial, sans-serif;
-  --serif:'Source Sans 3','Helvetica Neue', Arial,sans-serif; /* body */
+  --serif:'Open Sans','Source Sans 3','Helvetica Neue', Arial,sans-serif; /* body */
   --display:'Gentium Plus', 'Source Sans 3', Arial, serif;  /* titles */
 
   /* torn tape ends, shared by every snipe */
@@ -246,11 +246,11 @@ h1 span{
 }
 
 .group-title{
-  font-family:var(--display);
+  font-family: 'PT Sans', 'Open Sans', Arial, sans-serif;
   font-weight:600;
   text-transform:uppercase;
-  letter-spacing:0.08em;
-  font-size:1.05rem;
+  letter-spacing:0.05em;
+  font-size:.97rem;
   color:var(--ink);
   margin:48px 0 10px;
 }
