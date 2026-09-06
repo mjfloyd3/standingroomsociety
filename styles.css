@@ -180,7 +180,7 @@ h1 span{
 }
 .show-title{
   font-family:var(--display);
-  font-size:1.34rem;
+  font-size:1.45rem;
   font-weight:600;
   color:var(--ink);
   line-height:1.22;
@@ -388,6 +388,12 @@ footer a{color:var(--tape-deep);}
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
 
+.tft-banner__main {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
 .tft-banner:hover,
 .tft-banner:focus-visible {
   background: #b5433e;
@@ -398,6 +404,7 @@ footer a{color:var(--tape-deep);}
   width: 1.15rem;
   height: 1.15rem;
   color: #faf6ee;
+  margin-top: 0.15em;
 }
 
 .tft-banner__copy {
