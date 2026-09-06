@@ -31,7 +31,7 @@
       "address": "213 W 42nd St, New York, NY 10036",
       "opened": "Apr 22, 2018",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -49,7 +49,7 @@
       "address": "220 W 48th St, New York, NY 10036",
       "opened": "Nov 20, 2025",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7:30pm · Wed 2pm & 7:30pm · Thu 7:30pm · Fri 7:30pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
+      "schedule": "Sun 3pm · Tue 7:30pm · Wed 2pm & 7:30pm · Thu 7:30pm · Fri 7:30pm · Sat 2pm & 7:30pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -66,7 +66,7 @@
       "address": "160 W 47th St, New York, NY 10036",
       "opened": "Apr 26, 2026",
       "closes": null,
-      "schedule": "Sun 2pm & 7:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
+      "schedule": "Sun 2pm & 7:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -83,7 +83,7 @@
       "address": "230 W 49th St, New York, NY 10019",
       "opened": "Mar 24, 2011",
       "closes": null,
-      "schedule": "Sun 2pm & 7pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7pm ·[[dark Mon]]",
+      "schedule": "Sun 2pm & 7pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -100,7 +100,7 @@
       "address": "252 W 45th St, New York, NY 10036",
       "opened": "Mar 20, 2025",
       "closes": null,
-      "schedule": "Sun 2pm & 7:30pm · Tue 7pm · Wed 2pm · Thu 7pm · Fri 7:30pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
+      "schedule": "Sun 2pm & 7:30pm · Tue 7pm · Wed 2pm · Thu 7pm · Fri 7:30pm · Sat 2pm & 7:30pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -117,7 +117,7 @@
       "address": "214 W 42nd St, New York, NY 10036",
       "opened": "Mar 20, 2014",
       "closes": null,
-      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
+      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -152,7 +152,7 @@
       "address": "219 W 48th St, New York, NY 10036",
       "opened": "Apr 17, 2019",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -170,7 +170,7 @@
       "address": "235 W 50th St, New York, NY 10019",
       "opened": "Apr 26, 2025",
       "closes": null,
-      "schedule": "Sun 2pm · Tue 7pm · Wed 2pm & 8pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
+      "schedule": "Sun 2pm · Tue 7pm · Wed 2pm & 8pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -221,7 +221,7 @@
       "address": "254 W 54th St, New York, NY 10019",
       "opened": "Apr 23, 2026",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 7pm · Thu 3pm & 8pm · Fri 7pm · Sat 3pm & 8pm ·[[dark Mon]]",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 7pm · Thu 3pm & 8pm · Fri 7pm · Sat 3pm & 8pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -238,7 +238,7 @@
       "address": "200 W 45th St, New York, NY 10036",
       "opened": "Jul 8, 1997",
       "closes": null,
-      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
+      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -255,7 +255,7 @@
       "address": "124 W 43rd St, New York, NY 10036",
       "opened": "Nov 17, 2022",
       "closes": null,
-      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 2pm · Thu 7pm · Fri 8pm · Sat 2pm & 8pm ·[[dark Mon]]",
+      "schedule": "Sun 1pm & 6:30pm · Tue 7pm · Wed 2pm · Thu 7pm · Fri 8pm · Sat 2pm & 8pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -291,7 +291,7 @@
       "address": "226 W 46th St, New York, NY 10036",
       "opened": "Aug 6, 2015",
       "closes": null,
-      "schedule": "Sun 1pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 1pm & 7pm ·[[dark Mon]]",
+      "schedule": "Sun 1pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 1pm & 7pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -308,7 +308,7 @@
       "address": "236 W 45th St, New York, NY 10036",
       "opened": "Mar 19, 2025",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -326,7 +326,7 @@
       "address": "1535 Broadway (between 45th and 46th Streets), New York, NY 10036",
       "opened": "Apr 22, 2025",
       "closes": "Jan 3, 2027",
-      "schedule": "Sun 1pm & 7pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 1pm & 7pm ·[[dark Mon]]",
+      "schedule": "Sun 1pm & 7pm · Tue 7pm · Wed 7pm · Thu 7pm · Fri 7pm · Sat 1pm & 7pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -343,7 +343,7 @@
       "address": "208 W 41st St, New York, NY 10036",
       "opened": "Apr 20, 2026",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm ·[[dark Mon]]",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 7:30pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -360,7 +360,7 @@
       "address": "250 W 52nd St, New York, NY 10019",
       "opened": "Feb 1, 2022",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -395,7 +395,7 @@
       "address": "111 W 44th St, New York, NY 10036",
       "opened": "Nov 12, 2024",
       "closes": null,
-      "schedule": "Sun 2pm · Tue 7pm · Wed 2pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7pm ·[[dark Mon]]",
+      "schedule": "Sun 2pm · Tue 7pm · Wed 2pm & 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 7pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -413,7 +413,7 @@
       "address": "242 W 45th St, New York, NY 10036",
       "opened": "Apr 11, 2024",
       "closes": null,
-      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm ·[[dark Mon]]",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 7:30pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-25",
       "discount": [
@@ -431,7 +431,7 @@
       "address": "245 W 52nd St, New York, NY 10019",
       "opened": "Aug 25, 2026",
       "closes": "Jan 3, 2027",
-      "schedule": "Sun 2pm & 7:30pm · Tue 8pm · Wed 8pm · Thu 8pm · Fri 8pm · Sat 2pm & 8pm ·[[dark Mon]]",
+      "schedule": "Sun 2pm & 7:30pm · Tue 8pm · Wed 8pm · Thu 8pm · Fri 8pm · Sat 2pm & 8pm · dark Mon",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-08-28",
       "discount": [
