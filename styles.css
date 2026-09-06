@@ -5,12 +5,12 @@
    stylesheet is preserved; markup and JS are untouched.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,500&family=Oswald:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Oswald:wght@400;500;600&display=swap');
 
 :root{
   --paper:#e4e6e6;          /* cool gray paper, from the logo comps */
   --paper-deep:#d8dbdc;     /* pressed edge / subtle wells */
-  --ink:#17161a;
+  --ink:#2f2e32;
   --ink-soft:#5a5b60;
   --ink-faint:#8b8c90;
   --tape:#cd534d;           /* the red */
@@ -20,8 +20,8 @@
 
   /* Roles kept from the old token names so nothing dangles:   */
   --deco:'Oswald','Arial Narrow',sans-serif;        /* labels/tape */
-  --serif:'Source Sans 3','Helvetica Neue',Arial,sans-serif; /* body */
-  --display:'Bodoni Moda','Didot','Playfair Display',serif;  /* titles */
+  --serif:'PT Sans','Source Sans 3','Helvetica Neue', Arial,sans-serif; /* body */
+  --display:'Gentium Plus','PT Sans','Source Sans 3', Arial, serif;  /* titles */
 
   /* torn tape ends, shared by every snipe */
   --tape-tear:polygon(1.2% 0%, 98.4% 4%, 100% 18%, 98.8% 46%, 100% 74%, 98.2% 100%, 2% 96%, 0% 82%, 1.6% 52%, 0% 22%);
@@ -50,7 +50,7 @@ header{
 }
 h1{
   font-family:var(--display);
-  font-weight:600;
+  font-weight:700;
   font-size:clamp(2.4rem, 7vw, 4.4rem);
   line-height:1.04;
   margin:0;
@@ -183,7 +183,7 @@ h1 span{
   color:var(--ink);
   line-height:1.22;
 }
-.theater-name{font-weight:600;color:var(--ink);}
+.theater-name{font-weight:400;color:var(--ink);}
 .theater-addr{font-size:0.8rem;color:var(--ink-soft);margin-top:3px;}
 .dates-row{font-size:0.86rem;line-height:1.75;color:var(--ink);}
 .dates-row .lbl{
