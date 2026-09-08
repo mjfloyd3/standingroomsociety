@@ -518,29 +518,27 @@ function parsePlaybillListing(html, kind) {
  * hand-curated schedule/discount text for shows we already know about
  * (keyed by title) instead of clobbering it with the generic placeholder.
  */
-function mergeWithExisting(scraped, existing) {
-  const existingByTitle = new Map(existing.shows.map(s => [s.title, s]));
-
-  return scraped.map(fresh => {
-    const prior = existingByTitle.get(fresh.title);
-    if (!prior) return fresh;
-    return {
-      ...fresh,
-      opened: fresh.opened.startsWith('TBD') && prior.opened ? prior.opened : fresh.opened,
-      schedule: prior.schedule || fresh.schedule,
-      scheduleSource: prior.scheduleSource || fresh.scheduleSource || null,
-      scheduleUpdatedAt: prior.scheduleUpdatedAt || fresh.scheduleUpdatedAt || null,
-      discount: fresh.discount[0].startsWith("Check the show's official site")
-        ? prior.discount
-        : fresh.discount,
-      // If this run's poster caching failed (bad og:image, network error,
-      // etc.), fall back to whatever we already had cached rather than
-      // blanking it out — cachePosters() will overwrite this with a fresh
-      // value next run if the fetch succeeds.
-      localPosterPath: fresh.localPosterPath || prior.localPosterPath || null
-    };
-  });
-}
+ function mergeWithExisting(scraped, existing) {
+   const existingByTitle = new Map(existing.shows.map(s => [s.title, s]));
+   return scraped.map(fresh => {
+     const prior = existingByTitle.get(fresh.title);
+     if (!prior) return fresh;
+     return {
+       ...fresh,
+       opened: prior.openedSource === 'manual' ? prior.opened : fresh.opened,
+       openedSource: prior.openedSource === 'manual' ? 'manual' : (fresh.opened.startsWith('TBD') ? null : 'scraped'),
+       closed: prior.closedSource === 'manual' ? prior.closed : fresh.closed,
+       closedSource: prior.closedSource === 'manual' ? 'manual' : null,
+       schedule: prior.schedule || fresh.schedule,
+       scheduleSource: prior.scheduleSource || fresh.scheduleSource || null,
+       scheduleUpdatedAt: prior.scheduleUpdatedAt || fresh.scheduleUpdatedAt || null,
+       discount: fresh.discount[0].startsWith("Check the show's official site")
+         ? prior.discount
+         : fresh.discount,
+       localPosterPath: fresh.localPosterPath || prior.localPosterPath || null
+     };
+   });
+ }
 
 async function main() {
   console.log('Fetching Playbill (Broadway)…');

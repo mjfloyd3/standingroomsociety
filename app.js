@@ -175,6 +175,7 @@ function render(){
         <div>
           <div class="col-label">Show</div>
           <div class="show-title">${esc(s.title)}</div>
+          ${isLimitedEngagement(s.opened, s.closes) ? '<div class="limited-engagement-row"><span class="limited-engagement-badge">Limited Engagement</span></div>' : ''}
         </div>
         <div>
           <div class="col-label">Theater</div>
@@ -183,7 +184,6 @@ function render(){
         </div>
         <div>
           <div class="col-label">Run</div>
-          ${isLimitedEngagement(s.opened, s.closes) ? '<div class="limited-engagement-row"><span class="limited-engagement-badge">Limited Engagement</span></div>' : ''}
           <div class="dates-row"><span class="lbl">Opened</span>${esc(s.opened)}${isComingSoon(s.opened) ? '<span class="coming-soon-badge">Coming Soon</span>' : ''}</div>
           <div class="dates-row"><span class="lbl">Closes</span>${s.closes ? esc(s.closes) : '<span class="open-ended">Open run</span>'}${s.closes && isClosingSoon(s.closes) ? '<span class="closing-soon-badge">Closing Soon</span>' : ''}</div>
         </div>
