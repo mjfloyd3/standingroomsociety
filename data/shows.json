@@ -335,6 +335,24 @@
       "localPosterPath": "/posters/maybe-happy-ending-broadway-belasco-theatre-2024.jpg"
     },
     {
+      "title": "School Girls; Or, The African Mean Girls Play",
+      "kind": "broadway",
+      "slug": "school-girls-or-the-african-mean-girls-play-broadway-samuel-j-friedman-theatre-2026",
+      "theater": "Samuel J. Friedman Theatre",
+      "productionUrl": "https://playbill.com/production/school-girls-or-the-african-mean-girls-play-broadway-samuel-j-friedman-theatre-2026",
+      "address": "261 W 47th St, New York, NY 10036",
+      "opened": "Sep 28, 2026 (currently in previews)",
+      "closes": "Nov 1, 2026",
+      "closedSource": "manual",
+      "schedule": "Sun 2pm & 7pm · Wed 7pm · Thu 7pm · Fri 8pm · Sat 8pm (dark Mon, Tue)",
+      "scheduleSource": "auto",
+      "scheduleUpdatedAt": "2026-09-08",
+      "discount": [
+        "$35 rush tix available via the TodayTix App on the morning of each performance day"
+      ],
+      "localPosterPath": "/posters/school-girls-or-the-african-mean-girls-play-broadway-samuel-j-friedman-theatre-2026.jpg"
+    },
+    {
       "title": "Stranger Things: The First Shadow",
       "kind": "broadway",
       "slug": "stranger-things-the-first-shadow-broadway-marquis-theatre-2025",
