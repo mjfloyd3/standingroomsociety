@@ -256,7 +256,7 @@ h1 span{
   transform:rotate(-1.6deg);
   clip-path:var(--tape-tear);
 }
-.schedule{font-size:0.83rem;line-height:1.45;color:var(--ink);}
+.schedule{font-size:0.83rem;line-height:1.6;color:var(--ink);}
 .discount{font-size:0.83rem;line-height:1.6;color:var(--ink);}
 .discount > div + div{margin-top:5px;}
 .schedule a, .discount a{
