@@ -526,7 +526,7 @@ function parsePlaybillListing(html, kind) {
      return {
        ...fresh,
        opened: fresh.opened.startsWith('TBD') && prior.opened ? prior.opened : fresh.opened,
-       closed: prior.closedSource === 'manual' ? prior.closed : fresh.closed,
+       closes: prior.closedSource === 'manual' ? prior.closes : fresh.closes,
        closedSource: prior.closedSource === 'manual' ? 'manual' : null,
        schedule: prior.schedule || fresh.schedule,
        scheduleSource: prior.scheduleSource || fresh.scheduleSource || null,
