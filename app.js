@@ -60,7 +60,12 @@ async function loadShowData(){
     }
     shows = data.shows;
     if(updatedEl && data.lastUpdated){
-      updatedEl.textContent = `Data current as of ${data.lastUpdated} — always confirm on the show's official site before you go`;
+      const formatted = new Date(data.lastUpdated + 'T00:00:00').toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      });
+      updatedEl.textContent = `Data current as of ${formatted}`;
     }
   }catch(err){
     console.warn('Could not load data/shows.json, using embedded fallback data.', err);
