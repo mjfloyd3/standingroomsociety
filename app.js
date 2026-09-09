@@ -48,6 +48,7 @@ const cardList = document.getElementById('cardList');
 const emptyMsg = document.getElementById('emptyMsg');
 const updatedEl = document.getElementById('updatedText');
 let activeFilter = 'all';
+let searchQuery = '';
 
 async function loadShowData(){
   try{
@@ -141,8 +142,11 @@ function isLimitedEngagement(openedStr, closesStr){
 }
 
 function render(){
-  let filtered = shows.filter(s => activeFilter === 'all' || s.kind === activeFilter);
-  filtered = filtered.slice().sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+ let filtered = shows.filter(s => activeFilter === 'all' || s.kind === activeFilter);
+ if (searchQuery) {
+   filtered = filtered.filter(s => s.title.toLowerCase().includes(searchQuery));
+ }
+ filtered = filtered.slice().sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
 
   cardList.innerHTML = '';
   if(filtered.length === 0){
@@ -208,6 +212,11 @@ document.querySelectorAll('.tab').forEach(tab=>{
     activeFilter = tab.dataset.filter;
     render();
   });
+});
+
+document.getElementById('showSearch').addEventListener('input', (e) => {
+  searchQuery = e.target.value.trim().toLowerCase();
+  render();
 });
 
 loadShowData();

@@ -135,6 +135,33 @@ h1 span{
   border-bottom-color:var(--tape);
 }
 
+.search-block{
+  max-width:1140px;
+  margin: 18px auto 0;
+  padding:0 24px;
+  display:flex;
+  justify-content:center;
+}
+.show-search{
+  font-family:var(--serif);
+  font-size:0.86rem;
+  color:var(--ink);
+  background:#fff;
+  border:1px solid var(--hairline-strong);
+  border-radius:999px;
+  padding:10px 20px;
+  width:320px;
+  max-width:100%;
+  outline:none;
+  box-shadow:0 1px 2px rgba(23,22,26,0.06);
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.show-search::placeholder{color:var(--ink-faint);}
+.show-search:focus{
+  border-color:var(--tape);
+  box-shadow:0 0 0 3px rgba(205,83,77,0.12);
+}
+
 /* ---------- Listing ---------- */
 .stage {
   max-width:1140px;
