@@ -471,6 +471,12 @@ footer a{color:var(--tape-deep);}
   }
 }
 
+@media (max-width: 880px){
+  .show-search{
+    font-size:16px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{transition:none !important;}
 }
