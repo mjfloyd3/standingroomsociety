@@ -200,7 +200,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-09-09",
       "discount": [
-        "$30 digital lotteyr via TodayTix"
+        "$30 digital lottery via TodayTix"
       ],
       "localPosterPath": "/posters/the-rocky-horror-show-broadway-studio-54-2026.jpg",
       "closedSource": null
@@ -1602,13 +1602,15 @@
       "theater": "Studio Seaview",
       "productionUrl": "https://playbill.com/production/spring-awakening-off-broadway-studio-seaview-2026",
       "address": "Studio Seaview, New York, NY",
-      "opened": "TBD — not available from this source",
-      "closes": null,
+      "opened": "Dec 17, 2026 (previews begin Nov 27)",
+      "closes": "Feb 14, 2027",
+      "closedSource": "manual",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "$40 front row rush tickets availble through Dec 12"
+        "$40 lottery via TodayTix"
       ],
       "localPosterPath": "/posters/spring-awakening-off-broadway-studio-seaview-2026.png"
     },
