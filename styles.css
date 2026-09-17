@@ -163,9 +163,12 @@ h1 span{
 }
 
 .discount-line .bi {
-  color: #cd534d;
   margin-right: 4px;
 }
+
+.discount-line .bi-ticket-perforated { color: #a67c2e; } /* lottery */
+.discount-line .bi-stopwatch { color: #3d6b64; }          /* rush */
+.discount-line .bi-person-standing { color: #cd534d; }    /* standing room */
 
 
 /* ---------- Listing ---------- */
