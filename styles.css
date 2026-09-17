@@ -166,8 +166,8 @@ h1 span{
   margin-right: 4px;
 }
 
-.discount-line .bi-ticket-perforated { color: #a67c2e; } /* lottery */
-.discount-line .bi-stopwatch { color: #3d6b64; }          /* rush */
+.discount-line .bi-dice-5-fill { color: #a67c2e; } /* lottery */
+.discount-line .bi-lightning-fill { color: #3d6b64; }          /* rush */
 .discount-line .bi-person-standing { color: #cd534d; }    /* standing room */
 
 
