@@ -1604,15 +1604,15 @@
       "address": "Studio Seaview, New York, NY",
       "opened": "Dec 17, 2026 (previews begin Nov 27)",
       "closes": "Feb 14, 2027",
-      "closedSource": "manual",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "$40 front row rush tickets availble through Dec 12"
+        "$40 front row rush tickets availble through Dec 12",
         "$40 lottery via TodayTix"
       ],
-      "localPosterPath": "/posters/spring-awakening-off-broadway-studio-seaview-2026.png"
+      "localPosterPath": "/posters/spring-awakening-off-broadway-studio-seaview-2026.png",
+      "closedSource": "manual"
     },
     {
       "title": "Truly, Howard Hughes",
