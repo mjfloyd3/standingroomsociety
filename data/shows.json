@@ -310,7 +310,8 @@
       "scheduleUpdatedAt": "2026-09-09",
       "discount": [
         "$49 digital rush via TodayTix app",
-        "$49 general rush at the box office; $45 standing room when sold out"
+        "$49 general rush at the box office",
+        "$45 standing room when sold out"
       ],
       "localPosterPath": "/posters/juliet-broadway-stephen-sondheim-theatre-2022.jpg",
       "closedSource": null
