@@ -99,6 +99,14 @@ function linkify(escaped){
   );
 }
 
+function discountIcon(entry){
+  const text = entry.toLowerCase();
+  if (text.includes('lottery')) return 'bi-dice-5-fill';
+  if (text.includes('rush')) return 'bi-lightning-fill';
+  if (text.includes('standing room')) return 'bi-person-standing';
+  return null;
+}
+
 // Sort by title, ignoring a leading "The " so e.g. "The Book of Mormon"
 // files under B, the way theater listings conventionally sort.
 function sortKey(s){
@@ -202,7 +210,10 @@ function render(){
         </div>
         <div>
           <div class="col-label">Lottery / Rush</div>
-          <div class="discount">${s.discount.map(d=>`<div>${linkify(esc(d))}</div>`).join('')}</div>
+          <div class="discount">${s.discount.map(d=>{
+              const icon = discountIcon(d);
+              return `<div class="discount-line">${icon ? `<i class="bi ${icon}" aria-hidden="true"></i> ` : ''}${linkify(esc(d))}</div>`;
+            }).join('')}</div>
         </div>
       `;
       cardList.appendChild(card);

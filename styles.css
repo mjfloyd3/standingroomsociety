@@ -162,6 +162,12 @@ h1 span{
   box-shadow:0 0 0 3px rgba(205,83,77,0.12);
 }
 
+.discount-line .bi {
+  color: #cd534d;
+  margin-right: 4px;
+}
+
+
 /* ---------- Listing ---------- */
 .stage {
   max-width:1140px;
