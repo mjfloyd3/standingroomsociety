@@ -223,6 +223,7 @@ async function fetchProductionPageExtras(productionUrl) {
   const html = await fetchHtml(productionUrl);
   const $ = cheerio.load(html);
   const posterUrl = $('meta[property="og:image"]').attr('content') || null;
+  const officialUrl = extractOfficialUrl($);
 
   let schedule = null;
   try {
@@ -231,7 +232,7 @@ async function fetchProductionPageExtras(productionUrl) {
     console.warn(`  ! schedule parse failed for ${productionUrl}: ${err.message}`);
   }
 
-  return { posterUrl, schedule };
+  return { posterUrl, schedule, officialUrl };
 }
 
 /**
@@ -269,14 +270,18 @@ async function cachePoster(show) {
     : null;
   const posterCached = Boolean(cachedFile);
   const needsSchedule = scheduleNeedsRefresh(show);
+  const needsOfficialUrl = !Object.prototype.hasOwnProperty.call(show, 'officialUrl');
 
-  // Nothing to do at all: poster's on disk and the schedule isn't due yet.
-  if (posterCached && !needsSchedule) {
+  if (posterCached && !needsSchedule && !needsOfficialUrl) {
     return `/posters/${cachedFile}`;
   }
 
   try {
-    const { posterUrl: rawPosterUrl, schedule } = await fetchProductionPageExtras(show.productionUrl);
+    const { posterUrl: rawPosterUrl, schedule, officialUrl } = await fetchProductionPageExtras(show.productionUrl);
+
+    if (needsOfficialUrl) {
+      show.officialUrl = officialUrl;
+    }
 
     if (needsSchedule) {
       if (schedule) {
@@ -325,6 +330,40 @@ async function cachePoster(show) {
     return posterCached ? `/posters/${cachedFile}` : null;
   }
 }
+
+// Domains that show up in the same link block as a show's official site
+// but aren't it — skipped so the first REAL non-social/non-ticketing link
+// wins.
+const SOCIAL_DOMAINS = ['twitter.com', 'x.com', 'instagram.com', 'facebook.com', 'tiktok.com', 'youtube.com', 'threads.net'];
+const IGNORE_HOSTS = ['playbill.com', 'telecharge.com', 'ticketmaster.com', 'broadwayinbound.com', 'atgtickets.com'];
+
+function extractOfficialUrl($) {
+  const $buyTickets = $('a').filter((_, el) => $(el).text().trim() === 'Buy Tickets').first();
+  if (!$buyTickets.length) return null;
+
+  let $container = $buyTickets.parent();
+  for (let i = 0; i < 3 && $container.length; i++) {
+    if ($container.find('a[href^="http"]').length >= 2) break;
+    $container = $container.parent();
+  }
+  if (!$container.length) return null;
+
+  const links = $container.find('a[href^="http"]');
+  for (const el of links.toArray()) {
+    const href = $(el).attr('href');
+    if (!href) continue;
+    let host;
+    try {
+      host = new URL(href).hostname.replace(/^www\./, '');
+    } catch {
+      continue;
+    }
+    const skip = [...SOCIAL_DOMAINS, ...IGNORE_HOSTS].some(d => host === d || host.endsWith(`.${d}`));
+    if (!skip) return href;
+  }
+  return null;
+}
+
 
 async function cachePosters(shows) {
   if (!DRY_RUN && !fs.existsSync(POSTER_DIR)) fs.mkdirSync(POSTER_DIR, { recursive: true });
@@ -534,7 +573,8 @@ function parsePlaybillListing(html, kind) {
        discount: fresh.discount[0].startsWith("Check the show's official site")
          ? prior.discount
          : fresh.discount,
-       localPosterPath: fresh.localPosterPath || prior.localPosterPath || null
+       localPosterPath: fresh.localPosterPath || prior.localPosterPath || null,
+       ...(prior.officialUrl !== undefined ? { officialUrl: prior.officialUrl } : {})
      };
    });
  }
