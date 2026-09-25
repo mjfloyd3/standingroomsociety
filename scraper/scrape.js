@@ -331,37 +331,24 @@ async function cachePoster(show) {
   }
 }
 
-// Domains that show up in the same link block as a show's official site
-// but aren't it — skipped so the first REAL non-social/non-ticketing link
-// wins.
-const SOCIAL_DOMAINS = ['twitter.com', 'x.com', 'instagram.com', 'facebook.com', 'tiktok.com', 'youtube.com', 'threads.net'];
-const IGNORE_HOSTS = ['playbill.com', 'telecharge.com', 'ticketmaster.com', 'broadwayinbound.com', 'atgtickets.com'];
-
+// Playbill's production pages render a "bio" links block (class
+// bsp-bio-social-link) with one entry per outbound link — official site,
+// Twitter, Instagram, Facebook, etc. — each tagged with an icon class
+// identifying which kind it is. The official-site entry is the one and
+// only one tagged icon-external-link, which distinguishes it from the
+// social-platform entries (icon-twitter, icon-instagram, icon-facebook)
+// sitting right next to it in the same block.
+//
+// CONFIRMED against live pages for Wicked (wickedthemusical.com), The
+// Book of Mormon (bookofmormonbroadway.com), Hadestown (hadestown.com,
+// alongside its @hadestown Twitter/Instagram and Facebook links in the
+// same block), and several Off-Broadway shows with only a single bio
+// link (e.g. Masquerade → masqueradenyc.com).
 function extractOfficialUrl($) {
-  const $buyTickets = $('a').filter((_, el) => $(el).text().trim() === 'Buy Tickets').first();
-  if (!$buyTickets.length) return null;
-
-  let $container = $buyTickets.parent();
-  for (let i = 0; i < 3 && $container.length; i++) {
-    if ($container.find('a[href^="http"]').length >= 2) break;
-    $container = $container.parent();
-  }
-  if (!$container.length) return null;
-
-  const links = $container.find('a[href^="http"]');
-  for (const el of links.toArray()) {
-    const href = $(el).attr('href');
-    if (!href) continue;
-    let host;
-    try {
-      host = new URL(href).hostname.replace(/^www\./, '');
-    } catch {
-      continue;
-    }
-    const skip = [...SOCIAL_DOMAINS, ...IGNORE_HOSTS].some(d => host === d || host.endsWith(`.${d}`));
-    if (!skip) return href;
-  }
-  return null;
+  const $link = $('a.bsp-bio-social-link')
+    .filter((_, el) => $(el).find('i').hasClass('icon-external-link'))
+    .first();
+  return $link.length ? $link.attr('href') : null;
 }
 
 

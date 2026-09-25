@@ -221,6 +221,21 @@ h1 span{
   color:var(--ink);
   line-height:1.22;
 }
+.official-site-link{
+  display:inline-block;
+  font-size:0.95rem;
+  padding-left:4px;
+  color:var(--tape-deep);
+  vertical-align:middle;
+  transition:color .15s ease;
+}
+.official-site-link:hover{color:var(--tape);}
+/* The icon glyph is drawn by the ::before pseudo-element, not the .bi
+   element itself — bootstrap-icons.css sets font-weight there
+   (".bi::before{font-weight:normal!important}") and loads after this
+   file, so the override has to target ::before too, with higher
+   specificity than that rule. */
+.official-site-link .bi::before{font-weight:600 !important;}
 .theater-name{font-weight:400;color:var(--ink);}
 .theater-addr{font-size:0.8rem;color:var(--ink-soft);margin-top:3px;}
 .dates-row{font-size:0.86rem;line-height:1.75;color:var(--ink);}

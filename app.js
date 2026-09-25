@@ -86,17 +86,33 @@ function esc(str){
     .replace(/"/g, '&quot;');
 }
 
-// Turn bare domains/URLs in already-escaped text into hyperlinks,
-// e.g. "lottery at hamiltonmusical.com" → clickable link.
-// Runs AFTER esc() so the only HTML in the string is what we add here.
+// Turn "[label](url)" markdown-style links and bare domains/URLs in
+// already-escaped text into hyperlinks, e.g. "via [Lucky Seat](https://...)"
+// → a link reading "Lucky Seat", and "lottery at hamiltonmusical.com" →
+// a link reading the domain itself. Runs AFTER esc() so the only HTML in
+// the string is what we add here.
 function linkify(escaped){
-  return escaped.replace(
-    /(https?:\/\/)?((?:[a-z0-9-]+\.)+[a-z]{2,})(\/[^\s,)]*)?/gi,
+  const mdLinkRe = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  const bareUrlRe = /(https?:\/\/)?((?:[a-z0-9-]+\.)+[a-z]{2,})(\/[^\s,)]*)?/gi;
+  const linkifyBareUrls = text => text.replace(
+    bareUrlRe,
     (match, proto, domain, pathPart) => {
       const href = (proto || 'https://') + domain + (pathPart || '');
       return `<a href="${href}" target="_blank" rel="noopener">${match}</a>`;
     }
   );
+
+  let result = '';
+  let lastIndex = 0;
+  let match;
+  while ((match = mdLinkRe.exec(escaped)) !== null) {
+    const [full, label, url] = match;
+    result += linkifyBareUrls(escaped.slice(lastIndex, match.index));
+    result += `<a href="${url}" target="_blank" rel="noopener">${label}</a>`;
+    lastIndex = match.index + full.length;
+  }
+  result += linkifyBareUrls(escaped.slice(lastIndex));
+  return result;
 }
 
 function discountIcon(entry){
@@ -191,7 +207,7 @@ function render(){
         </div>
         <div>
           <div class="col-label">Show</div>
-          <div class="show-title">${esc(s.title)}</div>
+          <div class="show-title">${esc(s.title)}${s.officialUrl ? ` <a class="official-site-link" href="${esc(s.officialUrl)}" target="_blank" rel="noopener" title="Official site" aria-label="${esc(s.title)} official website"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>` : ''}</div>
           ${isLimitedEngagement(s.opened, s.closes) ? '<div class="limited-engagement-row"><span class="limited-engagement-badge">Limited Engagement</span></div>' : ''}
         </div>
         <div>
