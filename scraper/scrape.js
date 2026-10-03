@@ -498,7 +498,7 @@ function parsePlaybillListing(html, kind) {
     const opened = opensMatch
       ? `${opensMatch[1]} (in previews)`
       : previewsMatch
-        ? `${previewsMatch[1]} (previews begin; opening date TBA)`
+        ? `Previews begin ${previewsMatch[1]}`
         : 'TBD — not available from this source';
 
     let remainder = cardText
@@ -563,16 +563,17 @@ function parsePlaybillListing(html, kind) {
   return shows;
 }
 
-// The two annotations the scraper itself ever appends to "opened" while a
+// The two annotations the scraper itself ever adds to "opened" while a
 // show hasn't fully opened yet (see the opensMatch/previewsMatch logic
-// above). Stripped off in mergeWithExisting() the moment a show's card no
-// longer carries a previews/opens marker at all — i.e. the show has
-// actually opened — so the field self-heals to a bare date with no manual
-// cleanup. Matched specifically rather than "any trailing parenthetical"
-// so a genuine hand-written note on "opened" is never touched.
+// above) — one a trailing suffix, one a leading prefix. Stripped off in
+// mergeWithExisting() the moment a show's card no longer carries a
+// previews/opens marker at all — i.e. the show has actually opened — so
+// the field self-heals to a bare date with no manual cleanup. Matched
+// specifically rather than "any parenthetical"/"any prefix" so a genuine
+// hand-written note on "opened" is never touched.
 const PREVIEW_ANNOTATIONS = [
   / \(in previews\)$/,
-  / \(previews begin; opening date TBA\)$/,
+  /^Previews begin\s+/,
 ];
 
 function stripPreviewAnnotation(opened) {
