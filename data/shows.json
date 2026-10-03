@@ -633,8 +633,8 @@
       "theater": "HERE Arts Center",
       "productionUrl": "https://playbill.com/production/arias-with-a-twist-off-broadway-here-arts-center-2026",
       "address": "HERE Arts Center, New York, NY",
-      "opened": "TBD — not available from this source",
-      "closes": "Nov 1, 2026",
+      "opened": "Sep 17, 2026",
+      "closes": "Dec 20, 2026",
       "schedule": "Standard 8-show week, dark Mon — confirm exact days on the show's own site",
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
@@ -642,8 +642,8 @@
         "Check the show's official site for lottery/rush availability"
       ],
       "localPosterPath": null,
-      "closedSource": null,
-      "officialUrl": null
+      "closedSource": "manual",
+      "officialUrl": "https://here.org/shows/arias-with-a-twist-2026/"
     },
     {
       "title": "The Ask",
