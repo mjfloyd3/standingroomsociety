@@ -357,12 +357,36 @@ function extractOfficialUrl($) {
 }
 
 
+// How many cachePoster() calls (each up to one Playbill page fetch plus,
+// for a new poster, one image download) run at once. Shows are otherwise
+// fully independent, so this was a needless serial bottleneck — ~99 shows
+// one at a time vs. CACHE_CONCURRENCY at a time. Kept modest rather than
+// unbounded so the scraper doesn't hammer Playbill with 90+ simultaneous
+// requests and risk getting rate-limited/blocked.
+const CACHE_CONCURRENCY = 8;
+
+// Runs worker(item) over every item with at most `limit` calls in flight
+// at once — a small fixed pool of "lanes" that each pull the next item as
+// soon as they free up, rather than firing all items at once (which is
+// what Promise.all(items.map(worker)) would do).
+async function runWithConcurrency(items, limit, worker) {
+  let nextIndex = 0;
+  async function lane() {
+    while (nextIndex < items.length) {
+      const item = items[nextIndex++];
+      await worker(item);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, lane));
+}
+
 async function cachePosters(shows) {
   if (!DRY_RUN && !fs.existsSync(POSTER_DIR)) fs.mkdirSync(POSTER_DIR, { recursive: true });
 
   let cached = 0;
   let fetched = 0;
-  for (const show of shows) {
+
+  await runWithConcurrency(shows, CACHE_CONCURRENCY, async show => {
     const wasAlreadyCached = fs.existsSync(POSTER_DIR)
       && fs.readdirSync(POSTER_DIR).some(f => f.startsWith(`${show.slug}.`));
 
@@ -372,7 +396,8 @@ async function cachePosters(shows) {
       cached++;
       if (!wasAlreadyCached) fetched++;
     }
-  }
+  });
+
   console.log(`  → ${cached}/${shows.length} posters cached (${fetched} newly fetched this run)`);
 }
 
