@@ -486,14 +486,17 @@ function parsePlaybillListing(html, kind) {
     // plain theater line: "Begins Previews <date>" (opening date not
     // announced yet — <date> is the first preview) or "In Previews |
     // Opens <date>" (previews under way, opening night now scheduled for
-    // <date>). Once a show is fully open, Playbill's card drops both
-    // markers entirely, so there's no listing-page source for "opened" at
-    // that point — mergeWithExisting() is what keeps whichever of these
-    // was captured here as the permanent value from then on.
+    // <date>). Both get a parenthetical annotation flagging that "opened"
+    // isn't final yet. Once a show is fully open, Playbill's card drops
+    // both markers entirely, so there's no listing-page source for
+    // "opened" at that point — mergeWithExisting() carries the last
+    // captured value forward as permanent, stripping the annotation via
+    // PREVIEW_ANNOTATIONS below (the show finally being open is exactly
+    // what "no marker on the card anymore" means).
     const opensMatch = cardText.match(/In Previews\s*\|?\s*Opens\s+([A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4})/);
     const previewsMatch = cardText.match(/Begins Previews\s+([A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4})/);
     const opened = opensMatch
-      ? opensMatch[1]
+      ? `${opensMatch[1]} (in previews)`
       : previewsMatch
         ? `${previewsMatch[1]} (previews begin; opening date TBA)`
         : 'TBD — not available from this source';
@@ -560,6 +563,22 @@ function parsePlaybillListing(html, kind) {
   return shows;
 }
 
+// The two annotations the scraper itself ever appends to "opened" while a
+// show hasn't fully opened yet (see the opensMatch/previewsMatch logic
+// above). Stripped off in mergeWithExisting() the moment a show's card no
+// longer carries a previews/opens marker at all — i.e. the show has
+// actually opened — so the field self-heals to a bare date with no manual
+// cleanup. Matched specifically rather than "any trailing parenthetical"
+// so a genuine hand-written note on "opened" is never touched.
+const PREVIEW_ANNOTATIONS = [
+  / \(in previews\)$/,
+  / \(previews begin; opening date TBA\)$/,
+];
+
+function stripPreviewAnnotation(opened) {
+  return PREVIEW_ANNOTATIONS.reduce((text, re) => text.replace(re, ''), opened);
+}
+
 /**
  * Merge freshly-scraped shows with the existing JSON file: preserve any
  * hand-curated schedule/discount text for shows we already know about
@@ -572,7 +591,9 @@ function parsePlaybillListing(html, kind) {
      if (!prior) return fresh;
      return {
        ...fresh,
-       opened: fresh.opened.startsWith('TBD') && prior.opened ? prior.opened : fresh.opened,
+       opened: fresh.opened.startsWith('TBD') && prior.opened
+         ? stripPreviewAnnotation(prior.opened)
+         : fresh.opened,
        closes: prior.closedSource === 'manual' ? prior.closes : fresh.closes,
        closedSource: prior.closedSource === 'manual' ? 'manual' : null,
        schedule: prior.schedule || fresh.schedule,
