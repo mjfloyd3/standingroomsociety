@@ -17,15 +17,20 @@
  *    heading, optionally followed by a "Closes <date>" line (limited-run
  *    shows only — open-ended shows have no closing line), then a theater
  *    name line.
- *  - Neither listing page includes street address or opening date. Street
- *    addresses are supplied from a small static lookup table below (theater
- *    buildings don't move, so this needs updating only when a new venue
- *    opens — far less maintenance than scraping it fresh every day).
- *    Opening dates are NOT available from this source; shows without a
- *    prior known value will show "TBD" until filled in by hand or a future
- *    scraper enhancement pulls them from Playbill's "What's Currently
- *    Playing" article (playbill.com/article/whats-currently-playing-on-broadway),
- *    which does have them but in a harder-to-parse prose format.
+ *  - Neither listing page includes street address. Addresses are supplied
+ *    from a small static lookup table below (theater buildings don't move,
+ *    so this needs updating only when a new venue opens — far less
+ *    maintenance than scraping it fresh every day).
+ *    An opening date IS available from this source, but only while a show
+ *    hasn't fully opened yet — the card shows "Begins Previews <date>"
+ *    (opening date not yet announced) or "In Previews | Opens <date>"
+ *    (previews under way, opening night scheduled). Once a show is fully
+ *    open, Playbill drops both markers from its card, so there's nothing
+ *    left to scrape for "opened" at that point — mergeWithExisting() is
+ *    what keeps whichever date was captured during the preview window as
+ *    the permanent value from then on. A show already open before it was
+ *    ever scraped (i.e. never caught in previews) has no source for this
+ *    at all and keeps showing "TBD" until filled in by hand.
  *
  * CALIBRATION STATUS: the card-parsing logic climbs from each show's <a
  * href="/production/..."> link up to a small ancestor container and reads
@@ -477,6 +482,22 @@ function parsePlaybillListing(html, kind) {
     const closesMatch = cardText.match(/Closes\s+([A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4})/);
     const closes = closesMatch ? closesMatch[1] : null;
 
+    // A show not yet fully open shows one of two markers in place of a
+    // plain theater line: "Begins Previews <date>" (opening date not
+    // announced yet — <date> is the first preview) or "In Previews |
+    // Opens <date>" (previews under way, opening night now scheduled for
+    // <date>). Once a show is fully open, Playbill's card drops both
+    // markers entirely, so there's no listing-page source for "opened" at
+    // that point — mergeWithExisting() is what keeps whichever of these
+    // was captured here as the permanent value from then on.
+    const opensMatch = cardText.match(/In Previews\s*\|?\s*Opens\s+([A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4})/);
+    const previewsMatch = cardText.match(/Begins Previews\s+([A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4})/);
+    const opened = opensMatch
+      ? opensMatch[1]
+      : previewsMatch
+        ? `${previewsMatch[1]} (previews begin; opening date TBA)`
+        : 'TBD — not available from this source';
+
     let remainder = cardText
       .replace(title, '')
       .replace(/Closes\s+[A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4}/, '')
@@ -521,7 +542,7 @@ function parsePlaybillListing(html, kind) {
       theater,
       productionUrl,
       address: address || `${theater}, New York, NY`,
-      opened: 'TBD — not available from this source',
+      opened,
       closes,
       schedule: SCHEDULE_PLACEHOLDER,
       scheduleSource: null,       // 'auto' once the scraper successfully sets it, 'manual' if hand-edited
