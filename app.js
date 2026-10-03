@@ -86,6 +86,19 @@ function esc(str){
     .replace(/"/g, '&quot;');
 }
 
+// Tags an outbound link to a show's own site with our utm_source, so
+// their analytics (most sites' do parse this) can attribute the traffic
+// to us. Falls back to the original url untouched if it doesn't parse.
+function withUtmSource(url){
+  try{
+    const u = new URL(url);
+    u.searchParams.set('utm_source', 'standingroomsociety');
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
 // Turn "[label](url)" markdown-style links and bare domains/URLs in
 // already-escaped text into hyperlinks, e.g. "via [Lucky Seat](https://...)"
 // → a link reading "Lucky Seat", and "lottery at hamiltonmusical.com" →
@@ -207,7 +220,7 @@ function render(){
         </div>
         <div>
           <div class="col-label">Show</div>
-          <div class="show-title">${esc(s.title)}${s.officialUrl ? ` <a class="official-site-link" href="${esc(s.officialUrl)}" target="_blank" rel="noopener" title="Official site" aria-label="${esc(s.title)} official website"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>` : ''}</div>
+          <div class="show-title">${esc(s.title)}${s.officialUrl ? ` <a class="official-site-link" href="${esc(withUtmSource(s.officialUrl))}" target="_blank" rel="noopener" title="Official site" aria-label="${esc(s.title)} official website"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>` : ''}</div>
           ${isLimitedEngagement(s.opened, s.closes) ? '<div class="limited-engagement-row"><span class="limited-engagement-badge">Limited Engagement</span></div>' : ''}
         </div>
         <div>
