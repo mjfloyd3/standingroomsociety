@@ -177,6 +177,42 @@ function experiencesHtml(slug){
   `;
 }
 
+// ---------- Schedule ----------
+// The scraper writes day-by-day schedules as
+// "Sun 1pm & 6:30pm · Tue 7pm · … — dark Mon" (or "— dark Sun, Tue").
+// Those become one row per day (desktop) / the same single line (mobile,
+// via CSS). Anything else, e.g. "Standard 8-show week, dark Mon", isn't a
+// list of days and is shown as written.
+const SCHEDULE_DAY = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (.+)$/;
+const DARK_DAYS = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)(, (Mon|Tue|Wed|Thu|Fri|Sat|Sun))*$/;
+
+function parseSchedule(schedule){
+  const [main, dark] = schedule.split(' — dark ');
+  if (dark !== undefined && !DARK_DAYS.test(dark)) return null;
+  const days = main.split(' · ').map(seg => seg.match(SCHEDULE_DAY));
+  if (days.some(d => !d)) return null;
+  return { days: days.map(([, day, times]) => ({ day, times })), dark: dark ?? null };
+}
+
+// Must match SCHEDULE_PLACEHOLDER in scraper/scrape.js exactly.
+const SCHEDULE_NOT_LISTED = "Schedule not listed — check the show's site";
+
+function scheduleHtml(show){
+  const schedule = show.schedule;
+  if (schedule === SCHEDULE_NOT_LISTED && show.officialUrl) {
+    return `<div class="schedule">Schedule not listed — check <a href="${esc(withUtmSource(show.officialUrl))}" target="_blank" rel="noopener">the show's site</a></div>`;
+  }
+  const parsed = parseSchedule(schedule);
+  if (!parsed) return `<div class="schedule">${linkify(esc(schedule))}</div>`;
+  const row = (label, text, modifier = '') =>
+    `<div class="schedule-day${modifier}"><span class="lbl">${label}</span>${esc(text)}</div>`;
+  return `
+    <div class="schedule schedule--days">
+      ${parsed.days.map(d => row(d.day, d.times)).join('')}
+      ${parsed.dark ? row('Dark', parsed.dark, ' schedule-day--dark') : ''}
+    </div>`;
+}
+
 // ---------- "How did it go for you?" ----------
 // Asked inline in the card, one tap per question, modeled on Google Maps'
 // crowd-sourced prompts: the report is saved as soon as the two core
@@ -473,7 +509,7 @@ function render(){
         </div>
         <div>
           <div class="col-label">Schedule</div>
-          <div class="schedule">${linkify(esc(s.schedule))}</div>
+          ${scheduleHtml(s)}
         </div>
         <div>
           <div class="col-label">Lottery / Rush</div>

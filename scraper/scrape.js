@@ -86,13 +86,12 @@ const OUTPUT_PATH = path.join(__dirname, '..', 'data', 'shows.json');
 const POSTER_DIR = path.join(__dirname, '..', 'posters');
 const DRY_RUN = process.argv.includes('--dry-run');
 
-// Default schedule text before a show's production page has been fetched
-// (or if that fetch/parse fails). Used as a sentinel in two places: (1)
-// mergeWithExisting() checks against it to decide whether to keep a prior
-// hand-curated schedule instead of clobbering it, and (2) cachePoster()
-// checks against it to decide whether a freshly-parsed schedule is safe to
-// write in — i.e. never overwrite something a person already edited by hand.
-const SCHEDULE_PLACEHOLDER = "Standard 8-show week, dark Mon — confirm exact days on the show's own site";
+// Schedule text for a show until its Playbill page yields a real schedule —
+// which never happens for most Off-Broadway shows, since Playbill doesn't
+// publish theirs. Deliberately says "not listed" rather than guessing a
+// typical week. app.js matches this exact text (SCHEDULE_NOT_LISTED) to link
+// "the show's site" to the official site when one is known.
+const SCHEDULE_PLACEHOLDER = "Schedule not listed — check the show's site";
 
 // Shown alongside schedule text on the site. Schedules are refreshed
 // periodically (see SCHEDULE_REFRESH_DAYS) rather than every run, and

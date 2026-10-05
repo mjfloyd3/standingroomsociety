@@ -85,11 +85,12 @@ function parsePattern(patternText) {
 
 // Extracts schedule from Playbill's <p><strong>SCHEDULE:</strong><br><u>date range</u>: pattern</p>
 // Takes only the FIRST date-range block (most current), strips the <u> date range entirely.
+// Some pages put the colon outside the bold (<strong>SCHEDULE</strong>:), e.g. Chicago.
 function extractSchedule(html) {
   const $ = cheerio.load(html);
 
   const $scheduleP = $("p").filter((i, el) => {
-    return $(el).find("strong").first().text().trim().toUpperCase() === "SCHEDULE:";
+    return /^SCHEDULE:?$/.test($(el).find("strong").first().text().trim().toUpperCase());
   }).first();
 
   if (!$scheduleP.length) return null;
