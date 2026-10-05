@@ -76,6 +76,17 @@ async function loadShowData(){
   render();
 }
 
+// Visitor reports load separately so the show list never waits on them;
+// cards re-render with "How it went for N others" once they arrive.
+async function loadReportsData(){
+  try{
+    await fetchAllReports();
+    render();
+  }catch(err){
+    console.warn('Could not load visitor reports.', err);
+  }
+}
+
 // Escape data-driven strings before injecting into innerHTML. Critical once
 // shows.json is populated by the scraper — never trust scraped text as HTML.
 function esc(str){
@@ -162,7 +173,6 @@ function experiencesHtml(slug){
         </li>`;
       }).join('')}</ul>
       ${hiddenCount ? `<button type="button" class="experiences__more">Show ${hiddenCount} more</button>` : ''}
-      <p class="experiences__note">Saved on this device only while we test this feature.</p>
     </details>
   `;
 }
@@ -208,7 +218,8 @@ function shareHtml(slug){
       <div class="share-flow share-flow--done">
         <p class="share-flow__thanks" tabindex="-1"><i class="bi bi-check-lg" aria-hidden="true"></i> Thanks, added!</p>
         <button type="button" class="share-flow__secondary" data-action="undo">Undo</button>
-      </div>`;
+      </div>
+      ${error}`;
   }
 
   if (flow.step === 'price') {
@@ -275,7 +286,28 @@ const SHARE_FOCUS = {
   done: '.share-flow__thanks'
 };
 
-function answerShare(slug, answer){
+// Runs one database call for a show's questions. While it's in flight the
+// box is dimmed and further taps are ignored (flow.pending), so a double
+// tap can't create two reports. On failure the error is put on the flow
+// for the caller to show, and the step doesn't advance.
+async function persist(slug, flow, work){
+  flow.pending = true;
+  const box = cardList.querySelector(`.reports-area[data-slug="${CSS.escape(slug)}"] .share-flow`);
+  box?.classList.add('is-saving');
+  box?.setAttribute('aria-busy', 'true');
+  try {
+    await work();
+    return true;
+  } catch (err) {
+    console.warn('Saving report failed.', err);
+    flow.error = reportErrorMessage(err);
+    return false;
+  } finally {
+    flow.pending = false;
+  }
+}
+
+async function answerShare(slug, answer){
   const flow = shareFlows.get(slug);
   flow.error = null;
 
@@ -288,26 +320,18 @@ function answerShare(slug, answer){
 
   if (flow.step === 'ticket') {
     const gotTicket = answer === 'yes';
-    flow.reportId = saveReport(slug, {
-      method: flow.method,
-      gotTicket,
-      pricePaid: null,
-      standingRoomAvailable: null,
-      sharedBy: reporterName(),
-      submittedAt: new Date().toISOString()
+    const saved = await persist(slug, flow, async () => {
+      flow.reportId = await saveReport(slug, { method: flow.method, gotTicket, sharedBy: reporterName() });
     });
-    if (!flow.reportId) {
-      flow.error = 'Couldn’t save. Your browser may be blocking storage for this site.';
-      refreshShareArea(slug, SHARE_FOCUS.question);
-      return;
-    }
+    if (!saved) { refreshShareArea(slug, SHARE_FOCUS.question); return; }
     flow.step = gotTicket ? 'price' : stepAfterPrice(flow);
     refreshShareArea(slug, flow.step === 'price' ? SHARE_FOCUS.price : flow.step === 'done' ? SHARE_FOCUS.done : SHARE_FOCUS.question);
     return;
   }
 
   if (flow.step === 'sro') {
-    updateReport(slug, flow.reportId, { standingRoomAvailable: answer === 'yes' });
+    const saved = await persist(slug, flow, () => updateReport(slug, flow.reportId, { standingRoomAvailable: answer === 'yes' }));
+    if (!saved) { refreshShareArea(slug, SHARE_FOCUS.question); return; }
     flow.step = 'done';
     refreshShareArea(slug, SHARE_FOCUS.done);
   }
@@ -493,12 +517,13 @@ cardList.addEventListener('click', (e) => {
   const area = e.target.closest('.reports-area');
   if (!area) return;
   const slug = area.dataset.slug;
+  const flow = shareFlows.get(slug);
+  if (flow?.pending) return;
 
   const answer = e.target.closest('[data-answer]');
   if (answer) { answerShare(slug, answer.dataset.answer); return; }
 
   const action = e.target.closest('[data-action]')?.dataset.action;
-  const flow = shareFlows.get(slug);
   if (action === 'start') {
     shareFlows.set(slug, { step: 'method' });
     refreshShareArea(slug, SHARE_FOCUS.question);
@@ -511,18 +536,21 @@ cardList.addEventListener('click', (e) => {
     flow.step = flow.step === 'price' ? stepAfterPrice(flow) : 'done';
     refreshShareArea(slug, flow.step === 'done' ? SHARE_FOCUS.done : SHARE_FOCUS.question);
   } else if (action === 'undo') {
-    deleteReport(slug, flow.reportId);
-    shareFlows.delete(slug);
-    refreshShareArea(slug, SHARE_FOCUS.start);
+    flow.error = null;
+    persist(slug, flow, () => deleteReport(slug, flow.reportId)).then(removed => {
+      if (removed) shareFlows.delete(slug);
+      refreshShareArea(slug, removed ? SHARE_FOCUS.start : SHARE_FOCUS.done);
+    });
   }
 });
 
-cardList.addEventListener('submit', (e) => {
+cardList.addEventListener('submit', async (e) => {
   const form = e.target.closest('.share-flow[data-action="price"]');
   if (!form) return;
   e.preventDefault();
   const slug = form.closest('.reports-area').dataset.slug;
   const flow = shareFlows.get(slug);
+  if (flow.pending) return;
   flow.priceRaw = form.querySelector('.share-flow__input').value;
 
   const parsed = parsePrice(flow.priceRaw);
@@ -532,9 +560,13 @@ cardList.addEventListener('submit', (e) => {
     return;
   }
   flow.error = null;
-  if (parsed.value !== null) updateReport(slug, flow.reportId, { pricePaid: parsed.value });
+  if (parsed.value !== null) {
+    const saved = await persist(slug, flow, () => updateReport(slug, flow.reportId, { pricePaid: parsed.value }));
+    if (!saved) { refreshShareArea(slug, SHARE_FOCUS.price); return; }
+  }
   flow.step = stepAfterPrice(flow);
   refreshShareArea(slug, flow.step === 'done' ? SHARE_FOCUS.done : SHARE_FOCUS.question);
 });
 
 loadShowData();
+loadReportsData();

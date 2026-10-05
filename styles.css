@@ -359,7 +359,6 @@ h1 span{
 .experiences__toggle:focus-visible{outline:2px solid var(--tape);outline-offset:3px;}
 .experiences__hide, .experiences[open] .experiences__show{display:none;}
 .experiences[open] .experiences__hide{display:inline;}
-.experiences__note{margin:8px 0 0;font-size:0.75rem;color:var(--ink-faint);}
 .experiences__summary{
   list-style:none;
   margin:10px 0 0;
@@ -471,7 +470,10 @@ h1 span{
 }
 .share-flow__input:focus{outline:2px solid var(--tape);outline-offset:0;}
 .share-flow__input[aria-invalid="true"]{border-color:var(--tape);}
+.share-flow.is-saving{opacity:0.6;cursor:progress;}
+.share-flow.is-saving *{pointer-events:none;}
 .share-flow--done{display:flex;align-items:baseline;gap:12px;}
+.share-flow--done + .share-flow__error{margin-top:6px;}
 .share-flow__thanks{margin:0;font-weight:700;color:var(--ink);}
 .share-flow__thanks:focus{outline:none;}
 .share-flow__thanks .bi{color:#3d6b64;} /* same green as the rush icon */
