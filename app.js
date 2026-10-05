@@ -99,6 +99,220 @@ function withUtmSource(url){
   }
 }
 
+// At this many reports, the open list gets a per-method summary and only
+// the newest few reports show until "Show N more" is pressed.
+const EXPERIENCES_SUMMARY_MIN = 5;
+const EXPERIENCES_VISIBLE = 3;
+
+// One line per ticket method that has reports, counting every report,
+// e.g. "Rush: 4 of 6 got a ticket · $38–$45" or "Lottery: 0 of 3 won".
+function experiencesSummary(reports){
+  return Object.entries(TICKET_METHODS).flatMap(([method, label]) => {
+    const forMethod = reports.filter(r => r.method === method);
+    if (forMethod.length === 0) return [];
+    const got = forMethod.filter(r => r.gotTicket).length;
+    const outcome = method === 'lottery' ? 'won' : 'got a ticket';
+    const prices = forMethod.filter(r => r.gotTicket && r.pricePaid !== null).map(r => r.pricePaid);
+    const min = Math.min(...prices), max = Math.max(...prices);
+    const priceText = prices.length === 0 ? '' : min === max ? ` · ${formatPrice(min)}` : ` · ${formatPrice(min)}–${formatPrice(max)}`;
+    return [{ label, text: `${got} of ${forMethod.length} ${outcome}${priceText}` }];
+  });
+}
+
+// How many reports say standing room was available. Counts the "Was
+// standing room available?" answers ("Not sure" excluded) plus people who
+// tried standing room themselves: getting a ticket means it was available.
+function standingRoomStat(reports){
+  const answers = reports.flatMap(r => {
+    if (r.method === 'standing_room') return [r.gotTicket];
+    return r.standingRoomAvailable === true || r.standingRoomAvailable === false ? [r.standingRoomAvailable] : [];
+  });
+  if (answers.length === 0) return null;
+  const yes = answers.filter(Boolean).length;
+  return `${yes} of ${answers.length} said yes (${Math.round(yes / answers.length * 100)}%)`;
+}
+
+// loadReports / formatByline / formatReport / formatPrice come from
+// reports-store.js, loaded before this file. Collapsed by default under the
+// show's lottery / rush info; a native <details> needs no JS to open/close
+// and is keyboard and screen-reader accessible as-is.
+function experiencesHtml(slug){
+  const reports = loadReports(slug);
+  if (reports.length === 0) return '';
+  const label = reports.length === 1
+    ? 'How it went for someone else'
+    : `How it went for <span class="experiences__count">${reports.length}</span> others`;
+  const long = reports.length >= EXPERIENCES_SUMMARY_MIN;
+  const hiddenCount = long ? reports.length - EXPERIENCES_VISIBLE : 0;
+  const sro = standingRoomStat(reports);
+  return `
+    <details class="experiences">
+      <summary class="experiences__toggle">
+        <span class="experiences__show">${label}</span>
+        <span class="experiences__hide">Hide</span>
+      </summary>
+      ${sro ? `<p class="experiences__sro"><span class="experiences__method">Standing room available:</span> ${esc(sro)}</p>` : ''}
+      ${long ? `<ul class="experiences__summary">${experiencesSummary(reports).map(line => `<li><span class="experiences__method">${esc(line.label)}:</span> ${esc(line.text)}</li>`).join('')}</ul>` : ''}
+      <ul class="reports-list">${reports.map((r, i) => {
+        const extra = long && i >= EXPERIENCES_VISIBLE;
+        return `
+        <li${extra ? ' hidden tabindex="-1"' : ''}>
+          <span class="reports-list__byline">${esc(formatByline(r))}</span>
+          <span class="reports-list__details">${esc(formatReport(r))}</span>
+        </li>`;
+      }).join('')}</ul>
+      ${hiddenCount ? `<button type="button" class="experiences__more">Show ${hiddenCount} more</button>` : ''}
+      <p class="experiences__note">Saved on this device only while we test this feature.</p>
+    </details>
+  `;
+}
+
+// ---------- "How did it go for you?" ----------
+// Asked inline in the card, one tap per question, modeled on Google Maps'
+// crowd-sourced prompts: the report is saved as soon as the two core
+// answers are in (what they tried + whether they got a ticket), and the
+// optional follow-ups update that same report. Stopping early still counts.
+//
+// Per-show progress lives here rather than in the DOM because render()
+// rebuilds every card on each search keystroke / tab change.
+// slug -> { step, method, reportId, priceRaw, error }
+const shareFlows = new Map();
+
+function shareAreaHtml(slug){
+  return `<div class="reports-area" data-slug="${esc(slug)}">${experiencesHtml(slug)}${shareHtml(slug)}</div>`;
+}
+
+function answerButtons(options){
+  return options.map(([value, label]) =>
+    `<button type="button" class="share-flow__answer" data-answer="${esc(value)}">${esc(label)}</button>`
+  ).join('');
+}
+
+function shareHtml(slug){
+  const flow = shareFlows.get(slug);
+  const id = `share-${esc(slug)}`;
+  const error = flow?.error
+    ? `<p class="share-flow__error" id="${id}-error"><span class="visually-hidden">Error:</span> ${esc(flow.error)}</p>`
+    : '';
+
+  if (!flow) {
+    // The pencil marks this as "add yours", distinct from reading others'.
+    return `
+      <div class="share-experience">
+        <button type="button" class="reports-link" data-action="start"><i class="bi bi-pencil" aria-hidden="true"></i><span>How did it go for you?</span></button>
+      </div>`;
+  }
+
+  if (flow.step === 'done') {
+    return `
+      <div class="share-flow share-flow--done">
+        <p class="share-flow__thanks" tabindex="-1"><i class="bi bi-check-lg" aria-hidden="true"></i> Thanks, added!</p>
+        <button type="button" class="share-flow__secondary" data-action="undo">Undo</button>
+      </div>`;
+  }
+
+  if (flow.step === 'price') {
+    return `
+      <form class="share-flow" data-action="price" novalidate>
+        <label class="share-flow__question" for="${id}-price">How much did you pay? (optional)</label>
+        ${error}
+        <div class="share-flow__price">
+          <span class="share-flow__currency" aria-hidden="true">$</span>
+          <input class="share-flow__input" id="${id}-price" type="text" inputmode="decimal" autocomplete="off"
+            value="${esc(flow.priceRaw || '')}"${flow.error ? ` aria-invalid="true" aria-describedby="${id}-error"` : ''}>
+        </div>
+        <div class="share-flow__actions">
+          <button type="submit" class="share-flow__answer">Add</button>
+          <button type="button" class="share-flow__secondary" data-action="skip">Skip</button>
+        </div>
+      </form>`;
+  }
+
+  const QUESTIONS = {
+    method: ['What did you try?', Object.entries(TICKET_METHODS), 'cancel', 'Cancel'],
+    ticket: ['Did you get a ticket?', [['yes', 'Yes'], ['no', 'No']], 'cancel', 'Cancel'],
+    sro: ['Was standing room available?', [['yes', 'Yes'], ['no', 'No']], 'skip', 'Not sure']
+  };
+  const [question, options, secondaryAction, secondaryLabel] = QUESTIONS[flow.step];
+  return `
+    <div class="share-flow">
+      <p class="share-flow__question" id="${id}-q" tabindex="-1">${question}</p>
+      ${error}
+      <div class="share-flow__answers" role="group" aria-labelledby="${id}-q">${answerButtons(options)}</div>
+      <button type="button" class="share-flow__secondary" data-action="${secondaryAction}">${secondaryLabel}</button>
+    </div>`;
+}
+
+function parsePrice(raw){
+  const cleaned = raw.trim().replace(/^\$/, '').replace(/,/g, '').trim();
+  if (cleaned === '') return { value: null };
+  if (!/^\d+(\.\d{1,2})?$/.test(cleaned)) return { error: true };
+  return { value: Number(cleaned) };
+}
+
+// After the price question (or straight after "No ticket"): standing room is
+// asked about unless that's what they tried.
+function stepAfterPrice(flow){
+  return flow.method === 'standing_room' ? 'done' : 'sro';
+}
+
+// Re-renders one card's reports area in place, keeping the shared
+// experiences list open if it was, then moves focus to the new content.
+function refreshShareArea(slug, focusSelector){
+  const area = cardList.querySelector(`.reports-area[data-slug="${CSS.escape(slug)}"]`);
+  if (!area) return;
+  const wasOpen = area.querySelector('.experiences')?.open;
+  area.outerHTML = shareAreaHtml(slug);
+  const fresh = cardList.querySelector(`.reports-area[data-slug="${CSS.escape(slug)}"]`);
+  if (wasOpen && fresh.querySelector('.experiences')) fresh.querySelector('.experiences').open = true;
+  fresh.querySelector(focusSelector)?.focus();
+}
+
+const SHARE_FOCUS = {
+  start: '[data-action="start"]',
+  question: '.share-flow__question',
+  price: '.share-flow__input',
+  done: '.share-flow__thanks'
+};
+
+function answerShare(slug, answer){
+  const flow = shareFlows.get(slug);
+  flow.error = null;
+
+  if (flow.step === 'method') {
+    flow.method = answer;
+    flow.step = 'ticket';
+    refreshShareArea(slug, SHARE_FOCUS.question);
+    return;
+  }
+
+  if (flow.step === 'ticket') {
+    const gotTicket = answer === 'yes';
+    flow.reportId = saveReport(slug, {
+      method: flow.method,
+      gotTicket,
+      pricePaid: null,
+      standingRoomAvailable: null,
+      sharedBy: reporterName(),
+      submittedAt: new Date().toISOString()
+    });
+    if (!flow.reportId) {
+      flow.error = 'Couldn’t save. Your browser may be blocking storage for this site.';
+      refreshShareArea(slug, SHARE_FOCUS.question);
+      return;
+    }
+    flow.step = gotTicket ? 'price' : stepAfterPrice(flow);
+    refreshShareArea(slug, flow.step === 'price' ? SHARE_FOCUS.price : flow.step === 'done' ? SHARE_FOCUS.done : SHARE_FOCUS.question);
+    return;
+  }
+
+  if (flow.step === 'sro') {
+    updateReport(slug, flow.reportId, { standingRoomAvailable: answer === 'yes' });
+    flow.step = 'done';
+    refreshShareArea(slug, SHARE_FOCUS.done);
+  }
+}
+
 // Turn "[label](url)" markdown-style links and bare domains/URLs in
 // already-escaped text into hyperlinks, e.g. "via [Lucky Seat](https://...)"
 // → a link reading "Lucky Seat", and "lottery at hamiltonmusical.com" →
@@ -243,6 +457,7 @@ function render(){
               const icon = discountIcon(d);
               return `<div class="discount-line">${icon ? `<i class="bi ${icon}" aria-hidden="true"></i> ` : ''}${linkify(esc(d))}</div>`;
             }).join('')}</div>
+          ${s.slug ? shareAreaHtml(s.slug) : ''}
         </div>
       `;
       cardList.appendChild(card);
@@ -262,6 +477,64 @@ document.querySelectorAll('.tab').forEach(tab=>{
 document.getElementById('showSearch').addEventListener('input', (e) => {
   searchQuery = e.target.value.trim().toLowerCase();
   render();
+});
+
+// Delegated, since render() rebuilds every card on each search / tab change.
+cardList.addEventListener('click', (e) => {
+  const more = e.target.closest('.experiences__more');
+  if (more) {
+    const revealed = [...more.closest('.experiences').querySelectorAll('.reports-list li[hidden]')];
+    revealed.forEach(li => { li.hidden = false; });
+    more.remove();
+    revealed[0]?.focus();
+    return;
+  }
+
+  const area = e.target.closest('.reports-area');
+  if (!area) return;
+  const slug = area.dataset.slug;
+
+  const answer = e.target.closest('[data-answer]');
+  if (answer) { answerShare(slug, answer.dataset.answer); return; }
+
+  const action = e.target.closest('[data-action]')?.dataset.action;
+  const flow = shareFlows.get(slug);
+  if (action === 'start') {
+    shareFlows.set(slug, { step: 'method' });
+    refreshShareArea(slug, SHARE_FOCUS.question);
+  } else if (action === 'cancel') {
+    // Only offered before anything is saved, so there's nothing to remove.
+    shareFlows.delete(slug);
+    refreshShareArea(slug, SHARE_FOCUS.start);
+  } else if (action === 'skip') {
+    flow.error = null;
+    flow.step = flow.step === 'price' ? stepAfterPrice(flow) : 'done';
+    refreshShareArea(slug, flow.step === 'done' ? SHARE_FOCUS.done : SHARE_FOCUS.question);
+  } else if (action === 'undo') {
+    deleteReport(slug, flow.reportId);
+    shareFlows.delete(slug);
+    refreshShareArea(slug, SHARE_FOCUS.start);
+  }
+});
+
+cardList.addEventListener('submit', (e) => {
+  const form = e.target.closest('.share-flow[data-action="price"]');
+  if (!form) return;
+  e.preventDefault();
+  const slug = form.closest('.reports-area').dataset.slug;
+  const flow = shareFlows.get(slug);
+  flow.priceRaw = form.querySelector('.share-flow__input').value;
+
+  const parsed = parsePrice(flow.priceRaw);
+  if (parsed.error) {
+    flow.error = 'Enter the price as a number, like 45 or 45.50';
+    refreshShareArea(slug, SHARE_FOCUS.price);
+    return;
+  }
+  flow.error = null;
+  if (parsed.value !== null) updateReport(slug, flow.reportId, { pricePaid: parsed.value });
+  flow.step = stepAfterPrice(flow);
+  refreshShareArea(slug, flow.step === 'done' ? SHARE_FOCUS.done : SHARE_FOCUS.question);
 });
 
 loadShowData();
