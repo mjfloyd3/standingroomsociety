@@ -675,7 +675,8 @@ footer a{color:var(--tape-deep);}
   .tft-banner__cta {
     flex: 0 1 auto;
     font-size: 0.8rem;
-    margin-left: 0;
+    margin-left: 30px;
+    margin-top: 8px;
   }
 }
 
