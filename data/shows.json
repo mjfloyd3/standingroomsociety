@@ -381,7 +381,7 @@
       "productionUrl": "https://playbill.com/production/860-broadway-imperial-theatre-2026",
       "address": "249 W 45th St, New York, NY 10036",
       "opened": "Oct 21, 2026 (in previews)",
-      "closes": null,
+      "closes": "Jan 3, 2027",
       "schedule": "Sun 3pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm — dark Mon, Tue, Wed",
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-10-01",
@@ -391,7 +391,7 @@
         "General Rush: $59 at Imperial Theatre box office"
       ],
       "localPosterPath": "/posters/860-broadway-imperial-theatre-2026.jpg",
-      "closedSource": null,
+      "closedSource": "manual",
       "officialUrl": "https://www.billycrystal860.com/"
     },
     {
