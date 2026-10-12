@@ -7,7 +7,7 @@ theater + address, run dates, weekly schedule, and lottery/rush info.
 ```
 index.html               → markup only
 styles.css               → all styling
-app.js                   → fetch/render logic + embedded fallback data
+app.js                   → fetch/render logic
 data/shows.json          → the live dataset (auto-updated daily)
 scraper/scrape.js        → scrapes IBDB (Broadway) + Playbill (Off-Broadway)
 .github/workflows/       → runs the scraper every day, commits changes
