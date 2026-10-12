@@ -481,9 +481,9 @@
       "address": "249 W 45th St, New York, NY 10036",
       "opened": "Oct 21, 2026 (in previews)",
       "closes": "Jan 3, 2027",
-      "schedule": "Sun 3pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm — dark Mon, Tue, Wed",
+      "schedule": "Sun 3pm · Mon 7pm · Tue 7pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm — dark Wed",
       "scheduleSource": "auto",
-      "scheduleUpdatedAt": "2026-10-01",
+      "scheduleUpdatedAt": "2026-10-12",
       "discount": [
         "Digital Lottery: $59 via [Telecharge](https://rush.telecharge.com/)",
         "Digital Rush: $59 via [Telecharge](https://rush.telecharge.com/)",
@@ -522,16 +522,16 @@
       "productionUrl": "https://playbill.com/production/a-few-good-men-broadway-vivian-beaumont-theater-2026",
       "address": "150 W 65th St, New York, NY 10023",
       "opened": "Oct 29, 2026 (in previews)",
-      "closes": null,
-      "schedule": "Thu 8pm · Fri 8pm · Sat 8pm — dark Sun, Mon, Tue, Wed",
-      "scheduleSource": "auto",
+      "closes": "Jan 10, 2027",
+      "schedule": "Sun 3pm · Tue 7pm · Wed 2pm & 8pm · Thu 7pm · Fri 7pm · Sat 2pm & 8pm — dark Mon",
+      "scheduleSource": "manual",
       "scheduleUpdatedAt": "2026-10-12",
       "discount": [
         "Digital Lottery: $49 via [LCT Lottery](https://lctlottery.com/)",
         "Student Rush: $32 at the box office"
       ],
       "localPosterPath": "/posters/a-few-good-men-broadway-vivian-beaumont-theater-2026.jpg",
-      "closedSource": null,
+      "closedSource": "manual",
       "officialUrl": "https://www.lct.org"
     },
     {

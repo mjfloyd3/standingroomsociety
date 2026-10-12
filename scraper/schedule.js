@@ -83,8 +83,28 @@ function parsePattern(patternText) {
   return { performances, darkDays };
 }
 
+const MONTHS = ["january", "february", "march", "april", "may", "june", "july",
+  "august", "september", "october", "november", "december"];
+
+// "October 8–10" -> 3, "December 29–January 4" -> 7. null if it can't be read.
+function rangeLengthInDays(rangeText) {
+  const m = rangeText.trim().match(/^([a-z]+)\.?\s+(\d{1,2})\s*[-–—]\s*(?:([a-z]+)\.?\s+)?(\d{1,2})$/i);
+  if (!m) return null;
+  const startMonth = MONTHS.findIndex(name => name.startsWith(m[1].toLowerCase()));
+  const endMonth = m[3] ? MONTHS.findIndex(name => name.startsWith(m[3].toLowerCase())) : startMonth;
+  if (startMonth < 0 || endMonth < 0) return null;
+  const year = 2001; // any non-leap year; only the gap matters
+  const start = Date.UTC(year, startMonth, +m[2]);
+  const end = Date.UTC(endMonth < startMonth ? year + 1 : year, endMonth, +m[4]);
+  return Math.round((end - start) / 86400000) + 1;
+}
+
 // Extracts schedule from Playbill's <p><strong>SCHEDULE:</strong><br><u>date range</u>: pattern</p>
-// Takes only the FIRST date-range block (most current), strips the <u> date range entirely.
+// Takes the FIRST full-week date-range block (most current), strips the <u> date range entirely.
+// A block under 6 days (e.g. the first few preview days, "October 8–10") is skipped — 6, not 7,
+// because Playbill often lists a Mon-dark week as Tue–Sun ("July 28–August 2"). Without the skip,
+// every day the block doesn't mention would be reported as dark. Returns null if no
+// full-week block exists, so the show keeps its placeholder rather than a wrong schedule.
 // Some pages put the colon outside the bold (<strong>SCHEDULE</strong>:), e.g. Chicago.
 function extractSchedule(html) {
   const $ = cheerio.load(html);
@@ -101,12 +121,16 @@ function extractSchedule(html) {
   const contentLines = lines.slice(1); // drop "<strong>SCHEDULE:</strong>"
   if (!contentLines.length) return null;
 
-  const $line = cheerio.load(contentLines[0]);
-  $line("u").remove();
-  let patternText = $line.root().text();
-  patternText = patternText.replace(/^\s*:\s*/, "").trim();
-
-  return parsePattern(patternText);
+  for (const line of contentLines) {
+    const $line = cheerio.load(line);
+    const days = rangeLengthInDays($line("u").first().text());
+    if (days !== null && days < 6) continue;
+    $line("u").remove();
+    let patternText = $line.root().text();
+    patternText = patternText.replace(/^\s*:\s*/, "").trim();
+    return parsePattern(patternText);
+  }
+  return null;
 }
 
 // "Tue 7pm · Wed 1pm & 7pm · Thu 7pm · Fri 7pm · Sat 1pm & 7pm · Sun 1pm"
@@ -145,4 +169,14 @@ if (require.main === module) {
   const result2 = extractSchedule(multiBlockHtml);
   console.log(JSON.stringify(result2, null, 2));
   console.log("Display:", formatSchedule(result2));
+
+  const partialWeekHtml = `<p><strong>SCHEDULE:</strong><br><u>October 8–10</u>: Thursday @8pm, Friday @8pm, Saturday @8pm</p>`;
+  const partialThenFullHtml = `<p><strong>SCHEDULE:</strong><br><u>October 8–10</u>: Thursday @8pm, Friday @8pm, Saturday @8pm<br><br><u>October 11–17</u>: Sunday @3pm, Tuesday @8pm, Wednesday @2pm and 8pm, Thursday @8pm, Friday @8pm, Saturday @2pm and 8pm</p>`;
+
+  console.log("\n--- Partial preview week only (expect null) ---");
+  console.log(extractSchedule(partialWeekHtml));
+
+  console.log("\n--- Partial week then full week (expect second block) ---");
+  const result4 = extractSchedule(partialThenFullHtml);
+  console.log("Display:", formatSchedule(result4), "| dark:", result4.darkDays.join(", "));
 }
