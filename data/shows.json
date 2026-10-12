@@ -152,7 +152,7 @@
       "scheduleUpdatedAt": "2026-10-07",
       "discount": [
         "Digital Lottery: $55 via [Broadway Direct](https://lottery.broadwaydirect.com/show/wicked)",
-        "Student Rush: $45 at Gershwin Theatre box office (10 AM Mon–Sat / noon Sun)"
+        "Student Rush: $45 at Gershwin Theatre box office"
       ],
       "localPosterPath": "/posters/wicked-broadway-gershwin-theatre-2003.jpg",
       "closedSource": null,
@@ -171,7 +171,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-10-07",
       "discount": [
-        "Digital Lottery: $60 via [Broadway Direct](https://lottery.broadwaydirect.com/show/the-lion-king) (opens 9 AM day before, closes 3 PM day before)"
+        "Digital Lottery: $60 via [Broadway Direct](https://lottery.broadwaydirect.com/show/the-lion-king)"
       ],
       "localPosterPath": "/posters/the-lion-king-new-amsterdam-theatre-vault-0000008729.jpg",
       "closedSource": null,
@@ -267,7 +267,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-10-07",
       "discount": [
-        "Digital Lottery: $40 via TodayTix app (\"The Friday Forty\")",
+        "Digital Lottery: $40 via TodayTix app",
         "Cancellation Line: Full-price last-minute releases"
       ],
       "localPosterPath": "/posters/harry-potter-and-the-cursed-childlyric-theatre-2017-2018.jpg",
@@ -308,7 +308,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-10-07",
       "discount": [
-        "Digital Lottery: $10 via [Hamilton website](https://hamiltonmusical.com) or the Hamilton app (front-row orchestra seats)"
+        "Digital Lottery: $10 via [Hamilton website](https://hamiltonmusical.com) or the Hamilton app"
       ],
       "localPosterPath": "/posters/hamilton-broadway-richard-rodgers-theatre-2015.jpg",
       "closedSource": null,
@@ -483,7 +483,7 @@
       "scheduleSource": "auto",
       "scheduleUpdatedAt": "2026-10-06",
       "discount": [
-        "Digital Rush: $35 via TodayTix app (released morning of each performance)"
+        "Digital Rush: $35 via TodayTix app"
       ],
       "localPosterPath": "/posters/school-girls-or-the-african-mean-girls-play-broadway-samuel-j-friedman-theatre-2026.jpg",
       "closedSource": "manual",
@@ -525,7 +525,7 @@
       "scheduleUpdatedAt": "2026-09-29",
       "discount": [
         "Digital Lottery: $49 via [Lucky Seat](https://www.luckyseat.com)",
-        "Digital Rush: $49 via TodayTix app (released 9 AM day-of)"
+        "Digital Rush: $49 via TodayTix app"
       ],
       "localPosterPath": "/posters/other-desert-cities-broadway-hudson-theatre-2026.jpg",
       "closedSource": null,
