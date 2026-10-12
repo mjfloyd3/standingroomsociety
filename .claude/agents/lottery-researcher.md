@@ -24,10 +24,10 @@ Use whichever mode the request asks for. If it names shows, handle only those.
 
 ## Wording
 
-- Format: `<Method>: $<price> via [<Provider>](<url>)` or `<Method>: $<price> at the box office`. For example: `Digital Lottery: $49 via [LCT Lottery](https://lctlottery.com/)` or `Student Rush: $32 at the box office`.
-- Start every entry with one of these methods, because the site picks each line's icon from the words "lottery", "rush", and "standing room": `Digital Lottery`, `In-Person Lottery`, `Digital Rush`, `General Rush`, `Student Rush`, `Under-30 Rush`, `Standing Room`. For standing room, add `(only when sold out)` when that applies.
+- Format: `<Method>: $<price> via [<Provider>](<url>)` or `<Method>: $<price> at box office`. For example: `Digital Lottery: $49 via [LCT Lottery](https://lctlottery.com/)` or `Student Rush: $32 at box office`. Never name the theater ("at box office", not "at Belasco Theatre box office").
+- Start every entry with one of these methods, because the site picks each line's icon from the words "lottery", "rush", and "standing room": `Digital Lottery`, `In-Person Lottery`, `Digital Rush`, `General Rush`, `Student Rush`, `Under-30 Rush`, `Standing Room`. For standing room, add `(if sold out)` when that applies.
 - Link the provider name when there is a direct official URL.
-- Leave out entry windows, eligibility details, seat limits, and explanatory prose.
+- Keep every line as short as the examples. Leave out entry windows, eligibility details, seat limits, seat locations, and explanatory prose. The only parenthetical allowed is a short end date or condition, e.g. `(through Dec 12)` or `(if sold out)`.
 - If no offer can be verified, leave the existing placeholder unchanged; the daily scraper relies on its exact wording to know the entry hasn't been filled in. Do not claim that no offer exists based only on not finding one.
 
 ## Completion

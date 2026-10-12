@@ -57,7 +57,7 @@
       "scheduleUpdatedAt": "2026-10-07",
       "discount": [
         "Digital Lottery: $55 via [Broadway Direct](https://lottery.broadwaydirect.com/show/wicked)",
-        "Student Rush: $45 at Gershwin Theatre box office"
+        "Student Rush: $45 at box office"
       ],
       "localPosterPath": "/posters/wicked-broadway-gershwin-theatre-2003.jpg",
       "closedSource": null,
@@ -219,7 +219,7 @@
       "discount": [
         "Digital Lottery: $45 via [Broadway Direct](https://lottery.broadwaydirect.com/show/six-ny/)",
         "Student Rush: $35 at box office",
-        "Standing Room: $49 at box office (only when sold out)"
+        "Standing Room: $49 at box office (if sold out)"
       ],
       "localPosterPath": "/posters/six-the-musicallena-horne-theatre-2021-2022.jpg",
       "closedSource": null,
@@ -260,7 +260,7 @@
       "scheduleUpdatedAt": "2026-10-07",
       "discount": [
         "Digital Lottery: $49 via [Lucky Seat](https://www.luckyseat.com/shows/hadestown-newyork)",
-        "Standing Room: $39 at box office (only when sold out)"
+        "Standing Room: $39 at box office (if sold out)"
       ],
       "localPosterPath": "/posters/hadestownwalter-kerr-theatre-2018-2019.jpg",
       "closedSource": null,
@@ -342,8 +342,8 @@
       "scheduleUpdatedAt": "2026-10-07",
       "discount": [
         "Digital Lottery: $20.64 via [Telecharge](https://rush.telecharge.com/)",
-        "General Rush: $49 at Belasco Theatre box office",
-        "Standing Room: $42 at Belasco Theatre box office (only when sold out)"
+        "General Rush: $49 at box office",
+        "Standing Room: $42 at box office (if sold out)"
       ],
       "localPosterPath": "/posters/maybe-happy-ending-broadway-belasco-theatre-2024.jpg",
       "closedSource": null,
@@ -384,7 +384,7 @@
       "scheduleUpdatedAt": "2026-10-06",
       "discount": [
         "General Rush: $49 at box office",
-        "Standing Room: $39 at box office (only when sold out)"
+        "Standing Room: $39 at box office (if sold out)"
       ],
       "localPosterPath": "/posters/chicago-richard-rodgers-theatre-vault-0000003074.jpg",
       "closedSource": null,
@@ -510,7 +510,7 @@
       "discount": [
         "Digital Lottery: $59 via [Telecharge](https://rush.telecharge.com/)",
         "Digital Rush: $59 via [Telecharge](https://rush.telecharge.com/)",
-        "General Rush: $59 at Imperial Theatre box office"
+        "General Rush: $59 at box office"
       ],
       "localPosterPath": "/posters/860-broadway-imperial-theatre-2026.jpg",
       "closedSource": "manual",
@@ -531,8 +531,8 @@
       "scheduleUpdatedAt": "2026-10-07",
       "discount": [
         "Digital Rush: $49 via [TodayTix](https://www.todaytix.com/nyc/shows/25598-and-juliet-on-broadway)",
-        "General Rush: $49 at Stephen Sondheim Theatre box office",
-        "Standing Room: $45 at Stephen Sondheim Theatre box office (only when sold out)"
+        "General Rush: $49 at box office",
+        "Standing Room: $45 at box office (if sold out)"
       ],
       "localPosterPath": "/posters/juliet-broadway-stephen-sondheim-theatre-2022.jpg",
       "closedSource": null,
@@ -553,7 +553,7 @@
       "scheduleUpdatedAt": "2026-10-12",
       "discount": [
         "Digital Lottery: $49 via [LCT Lottery](https://lctlottery.com/)",
-        "Student Rush: $32 at the box office"
+        "Student Rush: $32 at box office"
       ],
       "localPosterPath": "/posters/a-few-good-men-broadway-vivian-beaumont-theater-2026.jpg",
       "closedSource": "manual",
@@ -1174,8 +1174,8 @@
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Student Rush: $23 at the City Center box office (select performances)",
-        "Ages 40 & under: $28 via [City Center Access Club](https://www.nycitycenter.org/tickets/city-center-access-club) (free sign-up; availability varies)"
+        "Student Rush: $23 at box office",
+        "Under-40: $28 via [Access Club](https://www.nycitycenter.org/tickets/city-center-access-club)"
       ],
       "localPosterPath": "/posters/in-the-heights-off-broadway-new-york-city-center-2026.png",
       "closedSource": "manual",
@@ -1376,7 +1376,7 @@
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "In-Person Lottery: $66.60 at the venue, held quarterly (dates on Instagram @masqueradenyc)"
+        "In-Person Lottery: $66.60 (quarterly, see @masqueradenyc)"
       ],
       "localPosterPath": "/posters/masquerade-off-broadway-masquerade-2025.jpg",
       "closedSource": null,
@@ -1717,7 +1717,7 @@
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "General Rush: $35 at St. Luke's Theatre box office",
+        "General Rush: $35 at box office",
         "Digital Rush: $40 via [TodayTix](https://www.todaytix.com/nyc/shows/47468-soon)"
       ],
       "localPosterPath": null,
@@ -1758,7 +1758,7 @@
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "General Rush: $40 front-row seats at Studio Seaview box office (previews only, through Dec 12)",
+        "General Rush: $40 at box office (through Dec 12)",
         "Digital Lottery: $40 via [TodayTix](https://www.todaytix.com/nyc/shows/14428-spring-awakening)"
       ],
       "localPosterPath": "/posters/spring-awakening-off-broadway-studio-seaview-2026.png",
