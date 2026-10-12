@@ -8,28 +8,21 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Oswald:wght@400;500;600&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 :root {
-  --paper: #e4e6e6;
-  /* cool gray paper, from the logo comps */
-  --paper-deep: #d8dbdc;
-  /* pressed edge / subtle wells */
+  --paper: #e4e6e6; /* cool gray paper, from the logo comps */
+  --paper-deep: #d8dbdc; /* pressed edge / subtle wells */
   --ink: #2f2e32;
   --ink-soft: #5a5b60;
   --ink-faint: #8b8c90;
-  --tape: #cd534d;
-  /* the red */
-  --tape-deep: #b03f3a;
-  /* links, hover states */
+  --tape: #cd534d; /* the red */
+  --tape-deep: #b03f3a; /* links, hover states */
   --hairline: rgba(23, 22, 26, 0.16);
   --hairline-strong: rgba(23, 22, 26, 0.55);
 
   /* Roles kept from the old token names so nothing dangles:   */
-  --deco: 'Oswald', 'Arial Narrow', sans-serif;
-  /* labels/tape */
+  --deco: 'Oswald', 'Arial Narrow', sans-serif; /* labels/tape */
   --deco1: 'Open Sans', 'Helvetica', Arial, sans-serif;
-  --serif: 'Open Sans', 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
-  /* body */
-  --display: 'Gentium Plus', 'Source Sans 3', Arial, serif;
-  /* titles */
+  --serif: 'Open Sans', 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif; /* body */
+  --display: 'Gentium Plus', 'Source Sans 3', Arial, serif; /* titles */
 
   /* torn tape ends, shared by every snipe */
   --tape-tear: polygon(1.2% 0%, 98.4% 4%, 100% 18%, 98.8% 46%, 100% 74%, 98.2% 100%, 2% 96%, 0% 82%, 1.6% 52%, 0% 22%);
@@ -93,8 +86,7 @@ h1 span {
   font-weight: 500;
   font-size: 0.34em;
   letter-spacing: 0.24em;
-  text-indent: 0.24em;
-  /* optical centering vs. tracking */
+  text-indent: 0.24em; /* optical centering vs. tracking */
   color: #fdfbf7;
   background:
     linear-gradient(104deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 34%, rgba(0, 0, 0, 0.10) 100%),
@@ -114,8 +106,7 @@ h1 span {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.42em;
-  padding-left: 0.42em;
-  /* optical centering with the letter-spacing */
+  padding-left: 0.42em; /* optical centering with the letter-spacing */
   font-size: 0.72rem;
   color: var(--ink-soft);
 }
@@ -210,21 +201,20 @@ h1 span {
   margin-right: 4px;
 }
 
+/* lottery */
 .discount-line .bi-dice-5-fill {
   color: #a67c2e;
 }
 
-/* lottery */
+/* rush */
 .discount-line .bi-lightning-fill {
   color: #3d6b64;
 }
 
-/* rush */
+/* standing room */
 .discount-line .bi-person-standing {
   color: #cd534d;
 }
-
-/* standing room */
 
 
 /* ---------- Listing ---------- */
@@ -777,11 +767,11 @@ h1 span {
   outline: none;
 }
 
+/* same green as the rush icon */
 .share-flow__thanks .bi {
   color: #3d6b64;
 }
 
-/* same green as the rush icon */
 .share-flow--done .share-flow__secondary {
   margin-top: 0;
 }
@@ -979,8 +969,7 @@ footer a {
   }
 
   .tft-banner__copy {
-    flex: 0 1 auto;
-    /* reset the 260px basis so it doesn't force height */
+    flex: 0 1 auto; /* reset the 260px basis so it doesn't force height */
     font-size: 0.8rem;
   }
 
