@@ -616,6 +616,10 @@ function stripPreviewAnnotation(opened) {
      if (!prior) return fresh;
      return {
        ...fresh,
+       // venueSource 'manual': the show moved and Playbill hasn't caught up.
+       ...(prior.venueSource === 'manual'
+         ? { theater: prior.theater, address: prior.address, venueSource: 'manual' }
+         : {}),
        opened: fresh.opened.startsWith('TBD') && prior.opened
          ? stripPreviewAnnotation(prior.opened)
          : fresh.opened,

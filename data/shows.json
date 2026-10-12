@@ -638,7 +638,7 @@
       ],
       "localPosterPath": "/posters/anon-a-tempest-at-our-kitchen-table-off-broadway-the-robert-w-wilson-mcc-theater-space-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://mcctheater.org/tix/anon/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -698,7 +698,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://theflea.org/stardust",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -758,7 +758,7 @@
       ],
       "localPosterPath": "/posters/copperfield-the-new-musical-off-broadway-the-duke-on-42nd-street-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.copperfieldthemusical.com/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -778,7 +778,7 @@
       ],
       "localPosterPath": "/posters/crazy-mama-a-true-story-of-love-and-madness-off-broadway-59e59-theater-c-2026.gif",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.59e59.org/shows/show-detail/crazy-mama-a-true-story-of-love-and-madness/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -818,7 +818,7 @@
       ],
       "localPosterPath": "/posters/the-curious-case-of-benjamin-button-off-broadway-public-theater-newman-theater-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://publictheater.org/productions/season/2627/the-curious-case-of-benjamin-button/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -838,7 +838,7 @@
       ],
       "localPosterPath": "/posters/the-dead-1904-off-broadway-the-american-irish-historical-society-2026.png",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://irishrep.org/whats-on/the-dead-1904",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -858,7 +858,7 @@
       ],
       "localPosterPath": "/posters/degenerates-off-broadway-playwrights-horizons-peter-jay-sharp-theater-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.playwrightshorizons.org/shows/production-history/2020s/2627/degenerates",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -918,7 +918,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.friendsoffbroadway.com/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -978,7 +978,7 @@
       ],
       "localPosterPath": "/posters/the-good-thief-off-broadway-irish-repertory-theatre-w-scott-mclucas-studio-theatre-2026.png",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://irishrep.org/whats-on/the-good-thief",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -998,7 +998,7 @@
       ],
       "localPosterPath": "/posters/good-time-charlie-off-broadway-public-theater-martinson-hall-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://publictheater.org/productions/season/2627/good-time-charlie/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1018,7 +1018,7 @@
       ],
       "localPosterPath": "/posters/the-hairy-ape-off-broadway-irish-repertory-theatre-2026.png",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://irishrep.org/whats-on/the-hairy-ape",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1078,7 +1078,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.nycitycenter.org/events/2026-2027-the-hope-theory",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1098,7 +1098,7 @@
       ],
       "localPosterPath": "/posters/how-shakespeare-saved-my-life-off-broadway-public-theater-shiva-theater-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://publictheater.org/productions/season/2627/how-shakespeare-saved-my-life/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1138,7 +1138,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.theshed.org/program/519-imitation-of-life",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1186,9 +1186,9 @@
       "title": "The Infinite Wrench",
       "kind": "off-broadway",
       "slug": "the-infinite-wrench-off-broadway-the-second-city-new-york-2017",
-      "theater": "The Second City New York",
+      "theater": "Asylum NYC",
       "productionUrl": "https://playbill.com/production/the-infinite-wrench-off-broadway-the-second-city-new-york-2017",
-      "address": "The Second City New York, New York, NY",
+      "address": "123 E 24th St, New York, NY 10010",
       "opened": "TBD — not available from this source",
       "closes": null,
       "schedule": "Schedule not listed — check the show's site",
@@ -1199,8 +1199,9 @@
       ],
       "localPosterPath": "/posters/the-infinite-wrench-off-broadway-the-second-city-new-york-2017.jpg",
       "closedSource": null,
-      "officialUrl": null,
-      "discountCheckedAt": "2026-10-12"
+      "officialUrl": "https://nyneofuturists.org/tiw",
+      "discountCheckedAt": "2026-10-12",
+      "venueSource": "manual"
     },
     {
       "title": "Jamie Allan's Amaze",
@@ -1219,7 +1220,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://amazemagic.com/new-york",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1239,7 +1240,7 @@
       ],
       "localPosterPath": "/posters/katsura-sunshines-rakugo-off-broadway-new-world-stages-stage-2-2019.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.rakugo.lol/broadway",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1279,7 +1280,7 @@
       ],
       "localPosterPath": "/posters/king-of-the-yees-off-broadway-the-pershing-square-signature-center-alice-griffin-jewel-box-theatre-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://signaturetheatre.org/show/king-of-the-yees/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1299,7 +1300,7 @@
       ],
       "localPosterPath": null,
       "closedSource": "manual",
-      "officialUrl": null,
+      "officialUrl": "https://stannswarehouse.org/show/kramer-fauci/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1339,7 +1340,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.sohoplayhouse.com/shows/lost-in-del-valle",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1359,7 +1360,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.sohoplayhouse.com/shows/conflicted",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1439,7 +1440,7 @@
       ],
       "localPosterPath": "/posters/mrs-stern-wanders-the-prussian-state-library-off-broadway-59e59-theater-a-2026.gif",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://59e59.org/shows/show-detail/mrs-stern-wanders-the-prussian-state-library/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1459,7 +1460,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://vineyardtheatre.org/shows/msblackforpresident/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1579,7 +1580,7 @@
       ],
       "localPosterPath": "/posters/the-ripple-the-wave-that-carried-me-home-off-broadway-playwrights-horizons-the-judith-o-rubin-theater-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.playwrightshorizons.org/shows/production-history/2020s/2627/the-ripple-the-wave-that-carried-me-home",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1599,7 +1600,7 @@
       ],
       "localPosterPath": "/posters/rope-off-broadway-the-new-group-theatre-at-st-clements-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://thenewgroup.org/events/rope-2026-10-13-700-pm/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1619,7 +1620,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://cherrylanetheatre.org/shows/school-pictures",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1639,7 +1640,7 @@
       ],
       "localPosterPath": "/posters/sea-wall-off-broadway-studio-seaview-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://studioseaview.com/show/sea-wall/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1680,7 +1681,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.singfeld.com/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1741,7 +1742,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://speakeasymagick.com/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1782,7 +1783,7 @@
       ],
       "localPosterPath": "/posters/triumph-off-broadway-public-theater-shiva-theater-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://publictheater.org/productions/season/2627/triumph/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1802,7 +1803,7 @@
       ],
       "localPosterPath": null,
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://cherrylanetheatre.org/shows/two-girls",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1822,7 +1823,7 @@
       ],
       "localPosterPath": "/posters/the-unbelievers-off-broadway-new-york-city-center-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.manhattantheatreclub.com/shows/2026-27-season/the-unbelievers/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1842,7 +1843,7 @@
       ],
       "localPosterPath": "/posters/the-verge-off-broadway-public-theater-luesther-hall-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://publictheater.org/productions/season/2627/the-verge/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1862,7 +1863,7 @@
       ],
       "localPosterPath": "/posters/the-visitors-off-broadway-the-pershing-square-signature-center-irene-diamond-stage-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://2st.com/shows/the-visitors",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1882,7 +1883,7 @@
       ],
       "localPosterPath": "/posters/waiting-for-lefty-off-broadway-classic-stage-company-lynn-f-angelson-theater-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://www.classicstage.org/lefty/",
       "discountCheckedAt": "2026-10-12"
     },
     {
@@ -1902,7 +1903,7 @@
       ],
       "localPosterPath": "/posters/well-see-off-broadway-public-theater-barbaralee-theater-formerly-anspacher-theater-2026.jpg",
       "closedSource": null,
-      "officialUrl": null,
+      "officialUrl": "https://publictheater.org/productions/season/2627/well-see/",
       "discountCheckedAt": "2026-10-12"
     }
   ]

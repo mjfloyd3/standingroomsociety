@@ -396,6 +396,12 @@ h1 span {
   color: var(--ink);
 }
 
+/* Off-Broadway shows with no scraped schedule link out instead. */
+.schedule-link .bi {
+  font-size: 0.75em;
+  margin-left: 2px;
+}
+
 /* Day-by-day schedules: one row per day on desktop, with the day labels a
    fixed width so the times line up. */
 .schedule--days {

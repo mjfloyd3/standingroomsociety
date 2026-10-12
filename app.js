@@ -155,8 +155,12 @@ const SCHEDULE_NOT_LISTED = "Schedule not listed — check the show's site";
 
 function scheduleHtml(show){
   const schedule = show.schedule;
-  if (schedule === SCHEDULE_NOT_LISTED && show.officialUrl) {
-    return `<div class="schedule">Schedule not listed — check <a href="${esc(withUtmSource(show.officialUrl))}" target="_blank" rel="noopener">the show's site</a></div>`;
+  if (schedule === SCHEDULE_NOT_LISTED) {
+    // No official site on file: fall back to a showtimes search.
+    const href = show.officialUrl
+      ? withUtmSource(show.officialUrl)
+      : 'https://www.google.com/search?q=' + encodeURIComponent(`${show.title} ${show.theater} showtimes`);
+    return `<div class="schedule"><a class="schedule-link" href="${esc(href)}" target="_blank" rel="noopener">See showtimes <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></div>`;
   }
   const parsed = parseSchedule(schedule);
   if (!parsed) return `<div class="schedule">${linkify(esc(schedule))}</div>`;
