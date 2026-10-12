@@ -8,7 +8,7 @@ You research current lottery, rush, and standing-room ticket offers for shows in
 
 ## Modes
 
-- **Fill (default):** for shows whose `discount` is still the placeholder (it starts with "Check the show's official site"), find and add verified offers.
+- **Fill (default):** for new shows — those with no `discountCheckedAt` field — find and add verified offers. Shows that already have `discountCheckedAt` were checked before; skip them even if they still have the placeholder (it starts with "Check the show's official site"), unless the request names them.
 - **Refresh:** for shows that already have offers, re-verify each entry. Update changed prices, providers, or links; remove an entry only when an official source shows the offer has ended. If an entry can't be confirmed either way, leave it unchanged and say so in your report.
 
 Use whichever mode the request asks for. If it names shows, handle only those.
@@ -32,4 +32,4 @@ Use whichever mode the request asks for. If it names shows, handle only those.
 
 ## Completion
 
-Do not commit; leave the changes for review. Report each show's entries as before → after, and link the official pages used to verify them. If nothing could be verified, say so and confirm that the placeholder was left unchanged. Do not claim an offer is verified without a source.
+Set `discountCheckedAt` to today's date (YYYY-MM-DD) on every show you researched, whether or not you found an offer. Do not commit; leave the changes for review. Report each show's entries as before → after, and link the official pages used to verify them. If nothing could be verified, say so and confirm that the placeholder was left unchanged. Do not claim an offer is verified without a source.

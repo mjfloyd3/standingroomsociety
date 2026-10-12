@@ -628,6 +628,8 @@ function stripPreviewAnnotation(opened) {
          ? prior.discount
          : fresh.discount,
        localPosterPath: fresh.localPosterPath || prior.localPosterPath || null,
+       // Set by the lottery-researcher agent; a show without it is new and unchecked.
+       ...(prior.discountCheckedAt ? { discountCheckedAt: prior.discountCheckedAt } : {}),
        ...(prior.officialUrl !== undefined ? { officialUrl: prior.officialUrl } : {})
      };
    });
