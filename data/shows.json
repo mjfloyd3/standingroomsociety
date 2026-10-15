@@ -363,9 +363,10 @@
       "scheduleSource": null,
       "scheduleUpdatedAt": null,
       "discount": [
-        "Check the show's official site or TodayTix for lottery/rush availability"
+        "Digital Lottery: $35 via [Telecharge Lottery](https://rush.telecharge.com/)"
       ],
       "localPosterPath": "/posters/wanted-broadway-james-earl-jones-theatre-2026.jpg",
+      "discountCheckedAt": "2026-10-15",
       "officialUrl": "https://wantedmusical.com/"
     },
     {
