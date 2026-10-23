@@ -179,6 +179,11 @@ const THEATER_ADDRESSES = {
   "Claire Tow Theater": "150 W 65th St, New York, NY 10023"
 };
 
+// Playbill's name for a venue where it differs from the name used here.
+const THEATER_ALIASES = {
+  "Helen Hayes Theatre": "Hayes Theater"
+};
+
 async function fetchHtml(url) {
   const res = await fetch(url, {
     headers: {
@@ -191,6 +196,17 @@ async function fetchHtml(url) {
     throw new Error(`Fetch failed for ${url}: ${res.status} ${res.statusText}`);
   }
   return res.text();
+}
+
+// True only for Playbill's own production pages (relative "/production/..." or
+// on playbill.com). A card's "Buy Tickets" button can point at a theater's or
+// ticketing site's own /production/ URL (roundabouttheatre.org,
+// ovationtix.com, ...); counting those as shows made the card-climb in
+// parsePlaybillListing() think the card held two shows and stop at the
+// heading, so the show lost its theater line and was silently skipped.
+function isPlaybillProductionHref(href) {
+  if (!href || !/\/production\//.test(href)) return false;
+  return href.startsWith('/') || /^https?:\/\/(www\.)?playbill\.com\//i.test(href);
 }
 
 function extractPlaybillSlug(href) {
@@ -456,7 +472,7 @@ function parsePlaybillListing(html, kind) {
   const hrefs = new Set();
   $('a[href*="/production/"]').each((_, el) => {
     const href = $(el).attr('href');
-    if (href) hrefs.add(href);
+    if (isPlaybillProductionHref(href)) hrefs.add(href);
   });
 
   hrefs.forEach(href => {
@@ -495,7 +511,7 @@ function parsePlaybillListing(html, kind) {
       const parent = $card.parent();
       if (!parent.length) break;
       const hrefsInParent = new Set(
-        parent.find('a[href*="/production/"]').map((_, a) => $(a).attr('href')).get()
+        parent.find('a[href*="/production/"]').map((_, a) => $(a).attr('href')).get().filter(isPlaybillProductionHref)
       );
       if (hrefsInParent.size > 1) break; // parent spans multiple shows — stop here
       $card = parent;
@@ -519,24 +535,31 @@ function parsePlaybillListing(html, kind) {
     // what "no marker on the card anymore" means).
     const opensMatch = cardText.match(/In Previews\s*\|?\s*Opens\s+([A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4})/);
     const previewsMatch = cardText.match(/Begins Previews\s+([A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4})/);
+    // Some cards carry a bare "Opens <date>" with no "In Previews |" in front.
+    const bareOpensMatch = opensMatch
+      ? null
+      : cardText.match(/Opens\s+([A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4})/);
     const opened = opensMatch
       ? `${opensMatch[1]} (in previews)`
-      : previewsMatch
-        ? `Previews begin ${previewsMatch[1]}`
-        : 'TBD — not available from this source';
+      : bareOpensMatch
+        ? `Opens ${bareOpensMatch[1]}`
+        : previewsMatch
+          ? `Previews begin ${previewsMatch[1]}`
+          : 'TBD — not available from this source';
 
     let remainder = cardText
       .replace(title, '')
       .replace(/Closes\s+[A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4}/, '')
       .replace(/Begins Previews\s+[A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4}/, '')
       .replace(/In Previews\s*\|?\s*Opens\s+[A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4}/, '')
+      .replace(/Opens\s+[A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4}/, '')
       .replace(/View Details.*$/, '')
       .replace(/Buy Tickets.*$/, '')
       .replace(/Trending/gi, '')
       .replace(/20\d\d Tony Winner/gi, '')
       .trim();
 
-    const theater = remainder || null;
+    const theater = (remainder && THEATER_ALIASES[remainder]) || remainder || null;
     if (!theater) return;
 
     const address = THEATER_ADDRESSES[theater];
@@ -598,6 +621,7 @@ function parsePlaybillListing(html, kind) {
 const PREVIEW_ANNOTATIONS = [
   / \(in previews\)$/,
   /^Previews begin\s+/,
+  /^Opens\s+/,
 ];
 
 function stripPreviewAnnotation(opened) {
