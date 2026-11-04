@@ -105,21 +105,21 @@ function standingRoomStat(reports){
 // and is keyboard and screen-reader accessible as-is.
 function experiencesHtml(slug){
   const reports = loadReports(slug);
-  if (reports.length === 0) return '';
-  const label = reports.length === 1
-    ? 'How it went for someone else'
-    : `How it went for <span class="experiences__count">${reports.length}</span> others`;
+  if (reports.length === 0) return '<p class="reports-empty">No reports yet. Be the first to share how it went.</p>';
   const long = reports.length >= EXPERIENCES_SUMMARY_MIN;
   const hiddenCount = long ? reports.length - EXPERIENCES_VISIBLE : 0;
   const sro = standingRoomStat(reports);
+  const lines = experiencesSummary(reports);
   return `
+    <ul class="experiences__summary">
+      ${lines.map(line => `<li><span class="experiences__method">${esc(line.label)}:</span> ${esc(line.text)}</li>`).join('')}
+      ${sro ? `<li><span class="experiences__method">Standing room available:</span> ${esc(sro)}</li>` : ''}
+    </ul>
     <details class="experiences">
       <summary class="experiences__toggle">
-        <span class="experiences__show">${label}</span>
-        <span class="experiences__hide">Hide</span>
+        <span class="experiences__show">${reports.length === 1 ? 'See the report' : `See all ${reports.length} reports`}</span>
+        <span class="experiences__hide">Hide reports</span>
       </summary>
-      ${sro ? `<p class="experiences__sro"><span class="experiences__method">Standing room available:</span> ${esc(sro)}</p>` : ''}
-      ${long ? `<ul class="experiences__summary">${experiencesSummary(reports).map(line => `<li><span class="experiences__method">${esc(line.label)}:</span> ${esc(line.text)}</li>`).join('')}</ul>` : ''}
       <ul class="reports-list">${reports.map((r, i) => {
         const extra = long && i >= EXPERIENCES_VISIBLE;
         return `
@@ -185,7 +185,11 @@ function scheduleHtml(show){
 const shareFlows = new Map();
 
 function shareAreaHtml(slug){
-  return `<div class="reports-area" data-slug="${esc(slug)}">${experiencesHtml(slug)}${shareHtml(slug)}</div>`;
+  const count = loadReports(slug).length;
+  return `<div class="reports-area" data-slug="${esc(slug)}">
+    <h3 class="reports-area__title">Visitor reports${count ? ` <span class="reports-area__count">${count}</span>` : ''}</h3>
+    ${experiencesHtml(slug)}${shareHtml(slug)}
+  </div>`;
 }
 
 function answerButtons(options){
@@ -205,7 +209,7 @@ function shareHtml(slug){
     // The pencil marks this as "add yours", distinct from reading others'.
     return `
       <div class="share-experience">
-        <button type="button" class="reports-link" data-action="start"><i class="bi bi-pencil" aria-hidden="true"></i><span>How did it go for you?</span></button>
+        <button type="button" class="reports-link" data-action="start"><i class="bi bi-plus-lg" aria-hidden="true"></i><span>How did it go for you?</span></button>
       </div>`;
   }
 
@@ -266,11 +270,11 @@ function stepAfterPrice(flow){
 // Re-renders one card's reports area in place, keeping the shared
 // experiences list open if it was, then moves focus to the new content.
 function refreshShareArea(slug, focusSelector){
-  const area = cardList.querySelector(`.reports-area[data-slug="${CSS.escape(slug)}"]`);
+  const area = detailEl.querySelector(`.reports-area[data-slug="${CSS.escape(slug)}"]`);
   if (!area) return;
   const wasOpen = area.querySelector('.experiences')?.open;
   area.outerHTML = shareAreaHtml(slug);
-  const fresh = cardList.querySelector(`.reports-area[data-slug="${CSS.escape(slug)}"]`);
+  const fresh = detailEl.querySelector(`.reports-area[data-slug="${CSS.escape(slug)}"]`);
   if (wasOpen && fresh.querySelector('.experiences')) fresh.querySelector('.experiences').open = true;
   fresh.querySelector(focusSelector)?.focus();
 }
@@ -288,7 +292,7 @@ const SHARE_FOCUS = {
 // for the caller to show, and the step doesn't advance.
 async function persist(slug, flow, work){
   flow.pending = true;
-  const box = cardList.querySelector(`.reports-area[data-slug="${CSS.escape(slug)}"] .share-flow`);
+  const box = detailEl.querySelector(`.reports-area[data-slug="${CSS.escape(slug)}"] .share-flow`);
   box?.classList.add('is-saving');
   box?.setAttribute('aria-busy', 'true');
   try {
@@ -380,7 +384,7 @@ function sortKey(s){
 // string doesn't parse — callers should treat that as "unknown", not "far off".
 function parseShowDate(str){
   if (!str) return null;
-  const d = new Date(str);
+  const d = new Date(str.replace(/^opens\s+/i, ''));
   return isNaN(d.getTime()) ? null : d;
 }
 
@@ -417,79 +421,246 @@ function isLimitedEngagement(openedStr, closesStr){
   return runLength >= 0 && runLength <= 21;
 }
 
+// ---------- Offers ----------
+// discount strings look like "Digital Lottery: $35 via [Lucky Seat](url)" or
+// "Standing Room: $39 at box office (if sold out)". Pulled apart so the grid
+// can show a "from" price and the panel can lay each offer out as a row.
+const KIND_NAMES = { lottery: 'Lottery', rush: 'Rush', standing: 'Standing' };
+const KIND_ICONS = { lottery: 'bi-dice-5-fill', rush: 'bi-lightning-fill', standing: 'bi-person-standing', other: 'bi-info-circle-fill' };
+
+function offerKind(text){
+  const t = text.toLowerCase();
+  if (t.includes('lottery')) return 'lottery';
+  if (t.includes('standing room')) return 'standing';
+  if (t.includes('rush')) return 'rush';
+  return null;
+}
+
+function parseOffer(raw){
+  const m = raw.match(/^([^:$]+?):\s*(.+)$/);
+  const label = m ? m[1].trim() : '';
+  const rest = m ? m[2].trim() : raw;
+  const price = rest.match(/\$(\d+(?:\.\d+)?)(?:\s*[-–]\s*\$?(\d+(?:\.\d+)?))?/);
+  const detail = price ? rest.replace(price[0], '').replace(/^\s+/, '').trim() : rest;
+  return {
+    raw,
+    kind: offerKind(label || raw),
+    label,
+    low: price ? Number(price[1]) : null,
+    priceText: price ? price[0] : '',
+    detail
+  };
+}
+
+function offersOf(show){
+  return show.discount.map(parseOffer);
+}
+
+function fromPrice(offers){
+  const lows = offers.map(o => o.low).filter(n => n !== null);
+  return lows.length ? Math.min(...lows) : null;
+}
+
+// ---------- Poster tiles ----------
+const TILE_COLORS = [['#c9a545', '#171614'], ['#a0372e', '#f3efe8'], ['#171614', '#c9a545']];
+
+function tileStyle(title){
+  let h = 0;
+  for (const ch of title) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const [bg, fg] = TILE_COLORS[h % TILE_COLORS.length];
+  return `background:${bg};color:${fg}`;
+}
+
+function initials(title){
+  const words = title.replace(/^the\s+/i, '').split(/\s+/).filter(w => /[a-z0-9]/i.test(w));
+  if (words.length === 1) return words[0][0].toUpperCase();
+  return words.slice(0, 2).map(w => w[0].toUpperCase()).join('');
+}
+
+function posterHtml(s){
+  return `<span class="poster__fallback" style="${tileStyle(s.title)}" aria-hidden="true">${esc(initials(s.title))}</span>` +
+    (s.localPosterPath
+      ? `<img class="poster__img" src="${esc(s.localPosterPath)}" alt="${esc(s.title)} poster" loading="lazy" onerror="this.remove()">`
+      : '');
+}
+
+// ---------- Grid + panel ----------
+const detailEl = document.getElementById('detail');
+const scrimEl = document.getElementById('scrim');
+const phoneLayout = window.matchMedia('(max-width: 900px)');
+let selectedSlug = null;
+const offerFilters = new Set();
+let visibleShows = [];
+
+function showId(s){ return s.slug || s.title; }
+
+// Status stickers slapped over the poster, most urgent first.
+function stickersHtml(s){
+  const list = [];
+  if (s.closes && isClosingSoon(s.closes)) list.push(['closing', 'Closing Soon!']);
+  if (isComingSoon(s.opened)) list.push(['opening', 'Opening Soon!']);
+  if (isLimitedEngagement(s.opened, s.closes)) list.push(['limited', 'Limited Engagement!']);
+  return list.length
+    ? `<span class="stickers">${list.map(([k, t]) => `<span class="sticker sticker--${k}">${t}</span>`).join('')}</span>`
+    : '';
+}
+
+function cardHtml(s){
+  const offers = offersOf(s);
+  const price = fromPrice(offers);
+  const kinds = [...new Set(offers.map(o => o.kind).filter(Boolean))];
+  const id = showId(s);
+  return `
+    <button type="button" class="show-card${id === selectedSlug ? ' is-selected' : ''}" data-id="${esc(id)}" aria-pressed="${id === selectedSlug}">
+      <span class="poster">
+        ${posterHtml(s)}
+        ${stickersHtml(s)}
+        ${price !== null ? `<span class="price-badge"><span class="price-badge__from">from</span><span class="price-badge__amt">$${price}</span></span>` : ''}
+      </span>
+      <span class="show-title">${esc(s.title)}</span>
+      <span class="theater-name">${esc(s.theater)}</span>
+      ${kinds.length ? `<span class="kinds">${kinds.map(k => `<span class="kind kind--${k}"><i class="bi ${KIND_ICONS[k]}" aria-hidden="true"></i>${KIND_NAMES[k]}</span>`).join('')}</span>` : ''}
+    </button>`;
+}
+
+function offerRowHtml(o){
+  const kind = o.kind || 'other';
+  const title = o.label || (o.kind ? '' : 'Tip');
+  return `
+    <li class="offer">
+      <span class="offer__icon offer__icon--${kind}" aria-hidden="true"><i class="bi ${KIND_ICONS[kind]}"></i></span>
+      <span class="offer__body">
+        ${title ? `<span class="offer__label">${esc(title)}</span>` : ''}
+        <span class="offer__detail">${linkify(esc(o.detail))}</span>
+      </span>
+      ${o.priceText ? `<span class="offer__price">${esc(o.priceText)}</span>` : ''}
+    </li>`;
+}
+
+function detailHtml(s){
+  const offers = offersOf(s);
+  const price = fromPrice(offers);
+  const badges = [
+    `<span class="tag">${s.kind === 'broadway' ? 'Broadway' : 'Off-Broadway'}</span>`,
+    isLimitedEngagement(s.opened, s.closes) ? '<span class="tag tag--limited">Limited Engagement</span>' : '',
+    isComingSoon(s.opened) ? '<span class="tag tag--opening">Opening Soon</span>' : '',
+    s.closes && isClosingSoon(s.closes) ? '<span class="tag tag--closing">Closing Soon</span>' : ''
+  ].join('');
+  return `
+    <div class="detail__scroll">
+      <button type="button" class="detail__close" data-close aria-label="Close details"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+      <div class="detail__hero">
+        <span class="poster poster--detail">${posterHtml(s)}</span>
+        <div class="detail__head">
+          <div class="tags">${badges}</div>
+          <h2 class="detail__title">${esc(s.title)}</h2>
+          <p class="detail__theater"><strong>${esc(s.theater)}</strong><span>${esc(s.address.replace(/,? New York.*$/, ''))}</span></p>
+          ${price !== null ? `<p class="detail__from"><span>From</span> <strong>$${price}</strong></p>` : ''}
+        </div>
+      </div>
+      <ul class="offers">${offers.map(offerRowHtml).join('')}</ul>
+      <dl class="facts">
+        <div><dt>Opened</dt><dd>${esc(s.opened)}</dd></div>
+        <div><dt>Closes</dt><dd>${s.closes ? esc(s.closes) : 'Open run'}</dd></div>
+      </dl>
+      <h3 class="detail__sub">Schedule</h3>
+      ${scheduleHtml(s)}
+      ${s.officialUrl ? `<a class="detail__official" href="${esc(withUtmSource(s.officialUrl))}" target="_blank" rel="noopener">Official site <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>` : ''}
+    </div>
+    ${s.slug ? shareAreaHtml(s.slug) : ''}`;
+}
+
+function renderDetail(){
+  const s = visibleShows.find(x => showId(x) === selectedSlug);
+  if (!s) { detailEl.innerHTML = ''; return; }
+  detailEl.innerHTML = detailHtml(s);
+}
+
+function setPanelOpen(open){
+  document.body.classList.toggle('panel-open', open);
+  scrimEl.hidden = !open;
+}
+
 function render(){
- let filtered = shows.filter(s => activeFilter === 'all' || s.kind === activeFilter);
- if (searchQuery) {
-   filtered = filtered.filter(s => s.title.toLowerCase().includes(searchQuery));
- }
- filtered = filtered.slice().sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+  let filtered = shows.filter(s => activeFilter === 'all' || s.kind === activeFilter);
+  if (searchQuery) filtered = filtered.filter(s => s.title.toLowerCase().includes(searchQuery));
+  offerFilters.forEach(kind => {
+    filtered = filtered.filter(s => offersOf(s).some(o => o.kind === kind));
+  });
+  filtered = filtered.slice().sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+  visibleShows = filtered;
 
   cardList.innerHTML = '';
-  if(filtered.length === 0){
+  if (filtered.length === 0) {
     emptyMsg.style.display = 'block';
+    detailEl.innerHTML = '';
+    setPanelOpen(false);
     return;
   }
   emptyMsg.style.display = 'none';
 
-  const groups = activeFilter === 'all'
-    ? [['Broadway', filtered.filter(s=>s.kind==='broadway')], ['Off-Broadway', filtered.filter(s=>s.kind==='off-broadway')]]
-    : [[null, filtered]];
-
-  groups.forEach(([label, list])=>{
-    if(list.length === 0) return;
-    if(label){
-      const gt = document.createElement('div');
-      gt.className = 'group-title';
-      gt.textContent = label;
-      cardList.appendChild(gt);
-    }
-    list.forEach(s=>{
-      const card = document.createElement('div');
-      card.className = 'show-card';
-      card.innerHTML = `
-        <div class="poster-cell">
-          ${s.localPosterPath
-            ? `<img class="show-poster" src="${esc(s.localPosterPath)}" alt="${esc(s.title)} poster art" width="92" height="143" loading="lazy" onerror="this.remove()">`
-            : ''}
-        </div>
-        <div>
-          <div class="col-label">Show</div>
-          <div class="show-title">${esc(s.title)}${s.officialUrl ? ` <a class="official-site-link" href="${esc(withUtmSource(s.officialUrl))}" target="_blank" rel="noopener" title="Official site" aria-label="${esc(s.title)} official website"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>` : ''}</div>
-          ${isLimitedEngagement(s.opened, s.closes) ? '<div class="limited-engagement-row"><span class="limited-engagement-badge">Limited Engagement</span></div>' : ''}
-        </div>
-        <div>
-          <div class="col-label">Theater</div>
-          <div class="theater-name">${esc(s.theater)}</div>
-          <div class="theater-addr">${esc(s.address)}</div>
-        </div>
-        <div>
-          <div class="col-label">Run</div>
-          <div class="dates-row"><span class="lbl">Opened</span>${esc(s.opened)}${isComingSoon(s.opened) ? '<span class="coming-soon-badge">Coming Soon</span>' : ''}</div>
-          <div class="dates-row"><span class="lbl">Closes</span>${s.closes ? esc(s.closes) : '<span class="open-ended">Open run</span>'}${s.closes && isClosingSoon(s.closes) ? '<span class="closing-soon-badge">Closing Soon</span>' : ''}</div>
-        </div>
-        <div>
-          <div class="col-label">Schedule</div>
-          ${scheduleHtml(s)}
-        </div>
-        <div>
-          <div class="col-label">Lottery / Rush</div>
-          <div class="discount">${s.discount.map(d=>{
-              const icon = discountIcon(d);
-              return `<div class="discount-line">${icon ? `<i class="bi ${icon}" aria-hidden="true"></i> ` : ''}${linkify(esc(d))}</div>`;
-            }).join('')}</div>
-          ${s.slug ? shareAreaHtml(s.slug) : ''}
-        </div>
-      `;
-      cardList.appendChild(card);
-    });
-  });
+  // The panel only opens when a card is clicked; drop it if that show got filtered out.
+  if (!filtered.some(s => showId(s) === selectedSlug)) selectedSlug = null;
+  cardList.innerHTML = filtered.map(cardHtml).join('');
+  renderDetail();
+  if (!selectedSlug) setPanelOpen(false);
 }
+
+function selectShow(id){
+  if (id === selectedSlug && document.body.classList.contains('panel-open')) { closePanel(); return; }
+  selectedSlug = id;
+  cardList.querySelectorAll('.show-card').forEach(c => {
+    const on = c.dataset.id === id;
+    c.classList.toggle('is-selected', on);
+    c.setAttribute('aria-pressed', on);
+  });
+  renderDetail();
+  detailEl.querySelector('.detail__scroll')?.scrollTo(0, 0);
+  setPanelOpen(true);
+  if (phoneLayout.matches) detailEl.focus();
+}
+
+cardList.addEventListener('click', (e) => {
+  const card = e.target.closest('.show-card');
+  if (card) selectShow(card.dataset.id);
+});
+
+function closePanel(){
+  const card = cardList.querySelector('.show-card.is-selected');
+  selectedSlug = null;
+  setPanelOpen(false);
+  if (card) {
+    card.classList.remove('is-selected');
+    card.setAttribute('aria-pressed', 'false');
+    card.focus();
+  }
+}
+scrimEl.addEventListener('click', closePanel);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.body.classList.contains('panel-open')) closePanel();
+});
+phoneLayout.addEventListener('change', closePanel);
 
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>{
+      t.classList.remove('active');
+      t.setAttribute('aria-pressed', 'false');
+    });
     tab.classList.add('active');
+    tab.setAttribute('aria-pressed', 'true');
     activeFilter = tab.dataset.filter;
+    render();
+  });
+});
+
+document.querySelectorAll('[data-offer]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const kind = chip.dataset.offer;
+    const on = !offerFilters.has(kind);
+    on ? offerFilters.add(kind) : offerFilters.delete(kind);
+    chip.classList.toggle('active', on);
+    chip.setAttribute('aria-pressed', on);
     render();
   });
 });
@@ -499,8 +670,9 @@ document.getElementById('showSearch').addEventListener('input', (e) => {
   render();
 });
 
-// Delegated, since render() rebuilds every card on each search / tab change.
-cardList.addEventListener('click', (e) => {
+// Delegated, since the panel is rebuilt whenever the selection changes.
+detailEl.addEventListener('click', (e) => {
+  if (e.target.closest('[data-close]')) { closePanel(); return; }
   const more = e.target.closest('.experiences__more');
   if (more) {
     const revealed = [...more.closest('.experiences').querySelectorAll('.reports-list li[hidden]')];
@@ -540,7 +712,7 @@ cardList.addEventListener('click', (e) => {
   }
 });
 
-cardList.addEventListener('submit', async (e) => {
+detailEl.addEventListener('submit', async (e) => {
   const form = e.target.closest('.share-flow[data-action="price"]');
   if (!form) return;
   e.preventDefault();

@@ -33,54 +33,40 @@
 <script src="app.js" defer></script>
 </head>
 <body>
-  <div>
-    <a href="https://tft.tdf.org/" class="tft-banner" target="_blank" rel="noopener noreferrer">
-      <span class="tft-banner__main">
-        <svg class="tft-banner__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M3 10V14C3 14.5523 3.44772 15 4 15H6L7.5 19.5C7.63 19.9 8 20.1 8.4 20L9.9 19.5C10.3 19.37 10.5 18.93 10.37 18.53L9.15 15H11L18 19V5L11 9H9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M18 8.5C19 9.2 19 10.8 18 11.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-          <path d="M4 10H6V15H4C3.44772 15 3 14.5523 3 14V11C3 10.4477 3.44772 10 4 10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-        </svg>
-        <span class="tft-banner__copy">
-          <strong>NYC high schoolers:</strong> the Mayor's Office &amp; TDF are giving out
-          free Broadway tickets and a 2-month TDF membership
-        </span>
-      </span>
-      <span class="tft-banner__cta">Tickets for Teens →</span>
-    </a>
+<header class="site-header">
+  <div class="site-header__inner">
+    <div class="brand">
+      <img src="srs-logo.png" alt="Standing Room Society: The Cheap Seats Directory" class="brand__logo" width="1300" height="600">
+      <p class="brand__tagline">The Cheapest Seats are No Seats.</p>
+    </div>
   </div>
-<header>
-  <img src="srs-logo.png" alt="Standing Room Society: The Cheap Seats Directory" width="500" style="max-width:100%;" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='block';
-"/>
-  <h1 id="logoFallback" style="display:none;">Standing Room <span>Society</span></h1>
-  <p style="color: #8c8888;font-weight: 600;font-size: 18px;">The Cheapest Seats are No Seats.</p>
-  <p style="font-size:14px;margin-bottom:0;">A directory of standing room, rush, and lottery ticket options for Broadway and Off-Broadway shows in New York City.</p>
 </header>
 
 <div class="controls">
-  <div class="tabs">
-    <button class="tab active" data-filter="all">All Shows</button>
-    <button class="tab" data-filter="broadway">Broadway</button>
-    <button class="tab" data-filter="off-broadway">Off-Broadway</button>
+  <div class="controls__inner">
+    <div class="chip-group" role="group" aria-label="Show type">
+      <button class="chip tab active" data-filter="all" aria-pressed="true">All</button>
+      <button class="chip tab" data-filter="broadway" aria-pressed="false">Broadway</button>
+      <button class="chip tab" data-filter="off-broadway" aria-pressed="false">Off-Broadway</button>
+    </div>
+    <span class="controls__divider" aria-hidden="true"></span>
+    <div class="chip-group" role="group" aria-label="Ticket type">
+      <button class="chip" data-offer="lottery" aria-pressed="false">Lottery</button>
+      <button class="chip" data-offer="rush" aria-pressed="false">Rush</button>
+      <button class="chip" data-offer="standing" aria-pressed="false">Standing Room</button>
+    </div>
+    <input type="text" id="showSearch" class="show-search" placeholder="Search shows…" aria-label="Search shows by title">
   </div>
 </div>
 
-<div class="search-block">
-  <input type="text" id="showSearch" class="show-search" placeholder="Search shows…" aria-label="Search shows by title">
-</div>
-
-<main class="stage">
-  <div class="header-row">
-    <div></div>
-    <div>Show</div>
-    <div>Theater</div>
-    <div>Run</div>
-    <div>Schedule</div>
-    <div>Lottery / Rush</div>
-  </div>
-  <div class="card-list" id="cardList"></div>
-  <div class="empty-msg" id="emptyMsg" style="display:none;">No shows to display right now.</div>
+<main class="browser">
+  <section class="grid-wrap" aria-label="Shows">
+    <div class="show-grid" id="cardList"></div>
+    <div class="empty-msg" id="emptyMsg" style="display:none;">No shows to display right now.</div>
+  </section>
+  <aside class="detail" id="detail" aria-label="Show details" tabindex="-1"></aside>
 </main>
+<div class="scrim" id="scrim" hidden></div>
 
 <footer>
 <div class="updated" id="updatedText">Loading current show data…</div>
