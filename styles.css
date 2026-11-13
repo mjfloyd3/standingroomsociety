@@ -26,7 +26,7 @@
   --display: 'Gentium Plus', 'Source Sans 3', Arial, serif; /* titles */
 
   --panel-w: 440px;
-  --controls-h: 64px;
+  --controls-h: 58px;
 }
 
 * { box-sizing: border-box; }
@@ -101,17 +101,22 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   flex-wrap: wrap;
 }
 
-.chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.controls__chips { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.chip-group { display: flex; gap: 6px; flex-wrap: wrap; }
 
 .controls__divider { width: 1px; height: 26px; background: var(--hairline); }
 
 .chip {
   font-family: var(--deco);
   font-weight: 400;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 9px 18px;
+  letter-spacing: 0.08em;
+  padding: 7px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
   color: var(--ink-soft);
   background: transparent;
   border: 1px solid var(--hairline);
@@ -119,6 +124,29 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   cursor: pointer;
   transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
+.chip .bi { font-size: 0.9em; opacity: .75; }
+.chip.active .bi { opacity: 1; }
+
+/* Offer chips: active state is a light tint of the same color used on the
+   card badges and offer rows (lottery gold, rush green, standing red). */
+.chip[data-offer] { --offer: var(--ink); }
+.chip[data-offer="lottery"] { --offer: #c0993a; --offer-ink: #6e5314; }
+.chip[data-offer="rush"] { --offer: #4f9a82; --offer-ink: #24574a; }
+.chip[data-offer="standing"] { --offer: var(--tape); --offer-ink: #8a2f2a; }
+.chip[data-offer].active {
+  background: color-mix(in srgb, var(--offer) 18%, var(--paper));
+  border-color: color-mix(in srgb, var(--offer) 55%, var(--paper));
+  color: var(--offer-ink);
+}
+.chip[data-offer].active .bi { color: var(--offer); }
+
+/* Playing today: the light blue from the "How did it go?" form. */
+#playingToday.active {
+  background: #80c2ff4d;
+  border-color: #80c2ff;
+  color: #1f5a8f;
+}
+#playingToday.active .bi { color: #3d8fd6; }
 .chip:hover { border-color: var(--hairline-strong); color: var(--ink); }
 .chip.active { background: var(--stage); border-color: var(--stage); color: var(--paper); }
 
@@ -809,8 +837,20 @@ footer a {
   .site-header__inner { padding: 0 16px 12px; }
   .controls { position: static; }
   .controls__inner { padding: 12px 16px; gap: 10px; }
-  .controls__divider { display: none; }
-  .show-search { margin-left: 0; width: 100%; font-size: 16px; }
+  .controls__divider { height: 20px; flex: none; }
+  .controls__chips {
+    flex-wrap: nowrap;
+    gap: 10px;
+    width: calc(100% + 32px);
+    margin: 0 -16px;
+    padding: 2px 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    order: 2;
+  }
+  .controls__chips::-webkit-scrollbar { display: none; }
+  .chip-group { flex-wrap: nowrap; }
+  .show-search { margin-left: 0; width: 100%; font-size: 16px; order: 1; }
   .show-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 18px 12px; }
 
   /* the panel becomes a bottom sheet */

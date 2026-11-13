@@ -4,6 +4,7 @@ const emptyMsg = document.getElementById('emptyMsg');
 const updatedEl = document.getElementById('updatedText');
 let activeFilter = 'all';
 let searchQuery = '';
+let playingToday = false;
 
 async function loadShowData(){
   try{
@@ -421,6 +422,33 @@ function isLimitedEngagement(openedStr, closesStr){
   return runLength >= 0 && runLength <= 21;
 }
 
+// ---------- Playing today ----------
+// "Playing today" hides only shows we KNOW aren't performing: not yet open,
+// already closed, or a day-by-day schedule with no slot today. Shows whose
+// schedule isn't listed (most of them) stay in, since hiding them would be
+// guessing. Weekday is taken in New York time, not the visitor's.
+function nyToday(){
+  const now = new Date();
+  const day = now.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/New_York' });
+  const [m, d, y] = now.toLocaleDateString('en-US', { timeZone: 'America/New_York' }).split('/').map(Number);
+  return { day, date: new Date(y, m - 1, d) };
+}
+
+function mayPlayToday(show){
+  const { day, date } = nyToday();
+  const open = parseShowDate(show.opened);
+  // Only a confirmed future start counts. "Opens Nov 16" and "Nov 15 (in
+  // previews)" can already be selling performances, so those stay in.
+  const inPreviews = /in previews|^opens/i.test(show.opened || '');
+  if (open && open > date && !inPreviews) return false;
+  const close = parseShowDate(show.closes);
+  if (close && close < date) return false;
+  if (!show.schedule || show.schedule === SCHEDULE_NOT_LISTED) return true;
+  const parsed = parseSchedule(show.schedule);
+  if (!parsed) return true;
+  return parsed.days.some(d => d.day === day);
+}
+
 // ---------- Offers ----------
 // discount strings look like "Digital Lottery: $35 via [Lucky Seat](url)" or
 // "Standing Room: $39 at box office (if sold out)". Pulled apart so the grid
@@ -587,6 +615,7 @@ function render(){
   offerFilters.forEach(kind => {
     filtered = filtered.filter(s => offersOf(s).some(o => o.kind === kind));
   });
+  if (playingToday) filtered = filtered.filter(mayPlayToday);
   filtered = filtered.slice().sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
   visibleShows = filtered;
 
@@ -663,6 +692,13 @@ document.querySelectorAll('[data-offer]').forEach(chip => {
     chip.setAttribute('aria-pressed', on);
     render();
   });
+});
+
+document.getElementById('playingToday').addEventListener('click', (e) => {
+  playingToday = !playingToday;
+  e.currentTarget.classList.toggle('active', playingToday);
+  e.currentTarget.setAttribute('aria-pressed', playingToday);
+  render();
 });
 
 document.getElementById('showSearch').addEventListener('input', (e) => {

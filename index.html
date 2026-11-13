@@ -44,16 +44,22 @@
 
 <div class="controls">
   <div class="controls__inner">
-    <div class="chip-group" role="group" aria-label="Show type">
-      <button class="chip tab active" data-filter="all" aria-pressed="true">All</button>
-      <button class="chip tab" data-filter="broadway" aria-pressed="false">Broadway</button>
-      <button class="chip tab" data-filter="off-broadway" aria-pressed="false">Off-Broadway</button>
-    </div>
-    <span class="controls__divider" aria-hidden="true"></span>
-    <div class="chip-group" role="group" aria-label="Ticket type">
-      <button class="chip" data-offer="lottery" aria-pressed="false">Lottery</button>
-      <button class="chip" data-offer="rush" aria-pressed="false">Rush</button>
-      <button class="chip" data-offer="standing" aria-pressed="false">Standing Room</button>
+    <div class="controls__chips">
+      <div class="chip-group" role="group" aria-label="Show type">
+        <button class="chip tab active" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip tab" data-filter="broadway" aria-pressed="false">Broadway</button>
+        <button class="chip tab" data-filter="off-broadway" aria-pressed="false">Off-Broadway</button>
+      </div>
+      <span class="controls__divider" aria-hidden="true"></span>
+      <div class="chip-group" role="group" aria-label="Ticket type">
+        <button class="chip" data-offer="lottery" aria-pressed="false"><i class="bi bi-dice-5-fill" aria-hidden="true"></i>Lottery</button>
+        <button class="chip" data-offer="rush" aria-pressed="false"><i class="bi bi-lightning-fill" aria-hidden="true"></i>Rush</button>
+        <button class="chip" data-offer="standing" aria-pressed="false"><i class="bi bi-person-standing" aria-hidden="true"></i>Standing Room</button>
+      </div>
+      <span class="controls__divider" aria-hidden="true"></span>
+      <div class="chip-group" role="group" aria-label="Availability">
+        <button class="chip" id="playingToday" aria-pressed="false" title="Hides shows known to be dark, closed or not yet open today. Shows without a listed schedule stay."><i class="bi bi-calendar-check" aria-hidden="true"></i>Playing today</button>
+      </div>
     </div>
     <input type="text" id="showSearch" class="show-search" placeholder="Search shows…" aria-label="Search shows by title">
   </div>
