@@ -406,8 +406,12 @@ body.panel-open .detail { display: flex; }
 .detail__official {
   display: inline-block; margin-top: 18px;
   font-family: var(--deco); font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
-  text-decoration: none; border-bottom: 1px solid rgba(205, 83, 77, 0.4);
+  align-self: flex-start; /* in the phone sheet's flex column it would otherwise stretch full width */
+  text-decoration: underline; text-decoration-color: rgba(205, 83, 77, 0.4);
+  text-decoration-thickness: 1px; text-underline-offset: 5px;
 }
+.detail__official .bi,
+.schedule-link .bi { display: inline-block; margin-left: 0.4em; text-decoration: none; } /* gap is margin, not a space, so the underline covers the words only */
 
 /* reports sit pinned under the scrolling details */
 .detail > .reports-area {
@@ -419,11 +423,20 @@ body.panel-open .detail { display: flex; }
 }
 
 .reports-area__title {
-  margin: 0 0 8px;
+  margin: 0 0 4px;
+  line-height: 1.3;
   font-family: var(--deco); font-weight: 400; font-size: 0.78rem;
   letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint);
 }
-.reports-area__count { margin-left: 4px; padding: 1px 7px; color: #fff; background: var(--ink-soft); border-radius: 999px; letter-spacing: 0; }
+.reports-area__count {
+  display: inline-flex; align-items: center; justify-content: center;
+  box-sizing: border-box;
+  min-width: 16px; height: 16px; margin-left: 5px; padding: 0 4px;
+  vertical-align: middle;
+  font-size: 0.62rem; font-weight: 500; line-height: 1; letter-spacing: 0;
+  color: #fff; background: var(--ink-soft); border-radius: 999px;
+}
+
 .reports-empty { margin: 0; font-size: 0.85rem; color: var(--ink-soft); }
 
 /* ---------- Scrim (phones) ---------- */
@@ -491,8 +504,9 @@ footer p { margin: 6px 0 0; }
 }
 
 .experiences {
-  margin-top: 10px;
-  font-size: 0.83rem;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  line-height: 1.4;
 }
 
 .experiences__toggle {
@@ -531,8 +545,8 @@ footer p { margin: 6px 0 0; }
   list-style: none;
   margin: 0;
   padding: 0;
-  font-size: 0.85rem;
-  line-height: 1.6;
+  font-size: 0.8rem;
+  line-height: 1.4;
   color: var(--ink);
 }
 
@@ -858,7 +872,9 @@ footer a {
   .detail {
     display: flex;
     position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 50;
-    height: auto; max-height: 88vh;
+    height: auto;
+    max-height: 88vh;
+    max-height: 88dvh; /* dvh follows the visible area as the browser toolbars show/hide; vh above is the fallback */
     border-left: 0; border-radius: 18px 18px 0 0;
     box-shadow: 0 -10px 40px rgba(23, 22, 26, 0.3);
     transform: translateY(105%);
@@ -868,14 +884,27 @@ footer a {
   body.panel-open { overflow: hidden; }
   body.panel-open .detail { transform: none; visibility: visible; transition: transform .25s ease; }
 
-  .detail__scroll { padding: 20px 18px; }
-  .detail > .reports-area { padding: 12px 18px 18px; max-height: 40%; }
+  /* One scroll for the whole sheet. Reports used to be pinned at 40% of the
+     height, which squeezed the offers and pushed the form off-screen. The
+     wrapper dissolves so the close button stays pinned to the sheet itself. */
+  .detail {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 18px 0;
+  }
+  .detail__scroll { display: contents; }
+  .detail__close { flex: none; margin: -6px 0 0 auto; }
+  .detail__hero { grid-template-columns: 92px 1fr; gap: 14px; }
+  .detail__title { font-size: 1.5rem; }
+  .detail > .reports-area {
+    max-height: none;
+    overflow: visible;
+    margin: 16px -18px 0;
+    padding: 12px 18px calc(24px + env(safe-area-inset-bottom));
+  }
 }
 
-@media (max-width: 420px) {
-  .detail__hero { grid-template-columns: 1fr; }
-  .poster--detail { max-width: 130px; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; }

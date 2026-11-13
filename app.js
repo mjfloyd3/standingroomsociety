@@ -161,7 +161,7 @@ function scheduleHtml(show){
     const href = show.officialUrl
       ? withUtmSource(show.officialUrl)
       : 'https://www.google.com/search?q=' + encodeURIComponent(`${show.title} ${show.theater} showtimes`);
-    return `<div class="schedule"><a class="schedule-link" href="${esc(href)}" target="_blank" rel="noopener">See showtimes <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></div>`;
+    return `<div class="schedule"><a class="schedule-link" href="${esc(href)}" target="_blank" rel="noopener">See showtimes<i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></div>`;
   }
   const parsed = parseSchedule(schedule);
   if (!parsed) return `<div class="schedule">${linkify(esc(schedule))}</div>`;
@@ -593,7 +593,7 @@ function detailHtml(s){
       </dl>
       <h3 class="detail__sub">Schedule</h3>
       ${scheduleHtml(s)}
-      ${s.officialUrl ? `<a class="detail__official" href="${esc(withUtmSource(s.officialUrl))}" target="_blank" rel="noopener">Official site <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>` : ''}
+      ${s.officialUrl ? `<a class="detail__official" href="${esc(withUtmSource(s.officialUrl))}" target="_blank" rel="noopener">Official site<i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>` : ''}
     </div>
     ${s.slug ? shareAreaHtml(s.slug) : ''}`;
 }
@@ -646,7 +646,7 @@ function selectShow(id){
   renderDetail();
   detailEl.querySelector('.detail__scroll')?.scrollTo(0, 0);
   setPanelOpen(true);
-  if (phoneLayout.matches) detailEl.focus();
+  if (phoneLayout.matches) detailEl.focus({ preventScroll: true });
 }
 
 cardList.addEventListener('click', (e) => {
